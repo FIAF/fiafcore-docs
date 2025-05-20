@@ -3,8 +3,8 @@ body {
 }
 
 .menu {
-    color: grey;
-    font-weight: bold;
+    color: black;
+    font-weight: 100;
     font-size: 16px;
 }
 
@@ -18,5 +18,5 @@ body {
 
 a {
     text-decoration: none;
-    color: grey;
+    color: black;
 }

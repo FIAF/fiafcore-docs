@@ -1,32 +1,23 @@
-
-
 <head>
     <title>FIAF Knowledge Graph</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fiafcore.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:100,200,300,400,500,600,700,800,900"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
 
 </head>
 
+<body>
+    <div style="width: 100%; background-color: white; display: flex; justify-content: center;">
+        <div style="width: 1000px; background-color: white;  ">
+            <div class="menu"
+                style="display: flex; justify-content: center; background-color: white;  border-bottom: 2px black solid;">
+                <div class="menu-item"><a id="intro" href="/">Introduction</a></div>
+                <div class="menu-item"><a id="ontology" href="/ontology">Ontology</a></div>
+                <div class="menu-item"><a id="sources" href="/sources">Sources</a></div>
+                <div class="menu-item"><a id="access" href="/access">Access</a></div>
+                <div class="menu-item"><a id="licence" href="/licence">Licence</a></div>
+            </div>
+            {% block content %}{% endblock %}
 
-<div style="width: 100%; background-color: white; display: flex; justify-content: center;">
-
-
-
-    <div style="width: 1000px; background-color: white;  ">
-
-<div class="menu" style="display: flex; justify-content: center; background-color: white;  border-bottom: 2px black solid;">
-    <div class="menu-item"><a href="/">Introduction</a></div>
-    <div class="menu-item"><a href="/ontology">Ontology</a></div>
-    <div class="menu-item"><a href="/sources">Sources</a></div>
-    <div class="menu-item"><a href="/access">Access</a></div>
-    <div class="menu-item"><a href="/licence">Licence</a></div>
-  
-
-</div>
-{% block content %}{% endblock %}
-
-
-
+        </div>
     </div>
-</div>
+</body>
