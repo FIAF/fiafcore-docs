@@ -12,11 +12,17 @@ body {
     background-color: white;
     margin: 8px; 
     text-align: center;
-    padding-left: 60px;
-    padding-right: 60px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 a {
     text-decoration: none;
     color: black;
+}
+
+xmp {
+  background-color: whitesmoke;
+  display: block;
+  padding: 20px;
 }
