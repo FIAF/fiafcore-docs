@@ -3,23 +3,71 @@
 
 {% block content %}
    
-<h3>FIAFcore</h3>
+<h4>FIAFcore</h4>
 
 The FIAFcore ontology was developed to enable the federation of filmographic data from disparate sources. It is heavily based on the language and structures of the <a href="https://www.fiafnet.org/pages/E-Resources/Cataloguing-Manual.html" style="color: crimson;">FIAF Cataloguing Manual</a>. 
 
 Key ontology elements are described below with available properties and an RDF example.
 
-<h3>Work</h3> 
-
-TODO link to ontology element.<br><br>
+<h4>Work</h4> 
 
 A Moving Image Work comprises both the intellectual or artistic content and the process of realisation in a cinematographic medium.<br><br>
 
-TODO table of properties.<br><br>
 
-<i>Turtle example</i> TODO would be cool to parse different syntaxes.
+<i>Properties</i>
+<br><br>
+<table>
+  <tr>
+    <td>Property</td>
+    <td>Range</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasCountry</td>
+    <td>fiafcore:Country</td>
+    <td>Where known and applicable, record the geographic origin of the moving image Work/Variant. This should be the country or countries where the principal offices or production facilities of the production company or companies are located.</td>
+  </tr>
+    <tr>
+    <td>fiafcore:hasEvent</td>
+    <td>fiafcore:Event</td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation or Item.</td>
+  </tr>
+    <tr>
+    <td>fiafcore:hasGenre</td>
+    <td>fiafcore:Genre</td>
+    <td>Genre describes categories of Works, characterized by similar plots, themes, settings, situations, and characters.</td>
+  </tr>
+    <tr>
+    <td>fiafcore:hasForm</td>
+    <td>fiafcore:Form</td>
+    <td>Form describes the format and/or purpose of a Work.</td>
+  </tr>
+    <tr>
+    <td>fiafcore:hasIdentifier</td>
+    <td>fiafcore:Identifier</td>
+    <td>An Identifier refers to a specific Work and provides clear disambiguation between Works when there is confusion.</td>
+  </tr>
+      <tr>
+    <td>fiafcore:hasManifestation</td>
+    <td>fiafcore:Manifestation</td>
+    <td>Express the relationship between a moving image Work or Variant and a moving image Manifestation.</td>
+  </tr>
+      <tr>
+    <td>fiafcore:hasSubject</td>
+    <td>fiafcore:Subject</td>
+    <td>Provide access to the Work by means of subjects (or subject identifiers) that describe the content of the Work.</td>
+  </tr>
+      <tr>
+    <td>fiafcore:hasTitle</td>
+    <td>fiafcore:Title</td>
+    <td>Record at least one title, identifying phrase, or name for the Moving Image Work.</td>
+  </tr>
+</table>
 
-<xmp><https://resource.fiafcore.org/e157473b-645b-4b84-941d-fd851c32ae86> 
+<br>
+<i>Example</i> 
+<br>
+<xmp><https://example.fiafcore.org/e157473b-645b-4b84-941d-fd851c32ae86> 
     a <https://ontology.fiafcore.org/Work> .
 </xmp>
 

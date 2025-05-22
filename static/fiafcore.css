@@ -26,3 +26,19 @@ xmp {
   display: block;
   padding: 20px;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    text-align: left;
+}
