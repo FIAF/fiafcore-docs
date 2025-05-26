@@ -13,7 +13,6 @@ Key ontology elements are described below with available properties and an RDF e
 
 A Moving Image Work comprises both the intellectual or artistic content and the process of realisation in a cinematographic medium.<br><br>
 
-
 <i>Properties</i>
 <br><br>
 <table>
@@ -46,6 +45,11 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
     <td>An Identifier refers to a specific Work and provides clear disambiguation between Works when there is confusion.</td>
+  </tr>
+   <tr>
+    <td>fiafcore:hasLanguageUsage</td>
+    <td>fiafcore:LanguageUsage</td>
+    <td>Record the usage type of a language (e.g. spoken, intertitles, subtitles, etc.</td>
   </tr>
   <tr>
     <td>fiafcore:hasManifestation</td>
@@ -81,8 +85,54 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
     a <https://ontology.fiafcore.org/Work> .
 </xmp>
 
-
 <h4>Variant</h4> 
+
+
+A moving image Variant is an entity that may be used to indicate any change to
+content-related characteristics that do not significantly change the overall content of
+a Work as a whole
+
+<i>Properties</i>
+<br><br>
+<table>
+  <tr>
+    <td>Property</td>
+    <td>Range</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasEvent</td>
+    <td>fiafcore:Event</td>
+    <td>An Event characterises occurrences in the lifecycle of a Moving Image Work, Variant, Manifestation or Item.</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasIdentifier</td>
+    <td>fiafcore:Identifier</td>
+    <td>An Identifier refers to a specific Variant and provides clear disambiguation between Variants when there is confusion.</td>
+  </tr>
+   <tr>
+    <td>fiafcore:hasLanguageUsage</td>
+    <td>fiafcore:LanguageUsage</td>
+    <td>Record the usage type of a language (e.g. spoken, intertitles, subtitles, etc.</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasManifestation</td>
+    <td>fiafcore:Manifestation</td>
+    <td>Express the relationship between a Moving Image Variant and a Moving Image Manifestation.</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasTitle</td>
+    <td>fiafcore:Title</td>
+    <td>Record at least one title, identifying phrase, or name for the Moving Image Variant.</td>
+  </tr>
+</table>
+
+<br>
+<i>Example</i> 
+<br>
+<xmp><https://example.fiafcore.org/e157473b-645b-4b84-941d-fd851c32ae86> 
+    a <https://ontology.fiafcore.org/Work> .
+</xmp>
 
 <h4>Manifestation</h4> 
 
