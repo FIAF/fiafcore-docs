@@ -11,7 +11,7 @@ Key ontology elements are described below with available properties and an RDF e
 
 <h4>Work</h4> 
 
-A Moving Image Work comprises both the intellectual or artistic content and the process of realisation in a cinematographic medium.<br><br>
+A moving image Work comprises both the intellectual or artistic content and the process of realisation in a cinematographic medium.<br><br>
 
 <i>Properties</i>
 <br><br>
@@ -24,12 +24,12 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
   <tr>
     <td>fiafcore:hasCountry</td>
     <td>fiafcore:Country</td>
-    <td>Where known and applicable, record the geographic origin of the Moving Image Work. This should be the country or countries where the principal offices or production facilities of the production company or companies are located.</td>
+    <td>Where known and applicable, record the geographic origin of the moving image Work. This should be the country or countries where the principal offices or production facilities of the production company or companies are located.</td>
   </tr>
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td>An Event characterises occurrences in the lifecycle of a Moving Image Work, Variant, Manifestation or Item.</td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation or Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasGenre</td>
@@ -54,7 +54,7 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
   <tr>
     <td>fiafcore:hasManifestation</td>
     <td>fiafcore:Manifestation</td>
-    <td>Express the relationship between a Moving Image Work and a Moving Image Manifestation.</td>
+    <td>Express the relationship between a moving image Work and a moving image Manifestation.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSubject</td>
@@ -64,17 +64,17 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
   <tr>
     <td>fiafcore:hasTitle</td>
     <td>fiafcore:Title</td>
-    <td>Record at least one title, identifying phrase, or name for the Moving Image Work.</td>
+    <td>Record at least one title, identifying phrase, or name for the moving image Work.</td>
   </tr>
   <tr>
     <td>fiafcore:hasVariant</td>
     <td>fiafcore:Variant</td>
-    <td>Express the relationship between a Moving Image Work and a Moving Image Variant.</td>
+    <td>Express the relationship between a moving image Work and a moving image Variant.</td>
   </tr>
   <tr>
     <td>fiafcore:hasWork</td>
     <td>fiafcore:Work</td>
-    <td>Express the relationship between a Moving Image Work and another Moving Image Work.</td>
+    <td>Express the relationship between a moving image Work and another moving image Work.</td>
   </tr>
 </table>
 
@@ -87,10 +87,7 @@ A Moving Image Work comprises both the intellectual or artistic content and the 
 
 <h4>Variant</h4> 
 
-
-A moving image Variant is an entity that may be used to indicate any change to
-content-related characteristics that do not significantly change the overall content of
-a Work as a whole
+A moving image Variant is an entity that may be used to indicate any change to content-related characteristics that do not significantly change the overall content of a Work as a whole.<br><br>
 
 <i>Properties</i>
 <br><br>
@@ -103,7 +100,7 @@ a Work as a whole
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td>An Event characterises occurrences in the lifecycle of a Moving Image Work, Variant, Manifestation or Item.</td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation or Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
@@ -118,7 +115,7 @@ a Work as a whole
   <tr>
     <td>fiafcore:hasManifestation</td>
     <td>fiafcore:Manifestation</td>
-    <td>Express the relationship between a Moving Image Variant and a Moving Image Manifestation.</td>
+    <td>Express the relationship between a moving image Variant and a moving image Manifestation.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTitle</td>
@@ -136,17 +133,82 @@ a Work as a whole
 
 <h4>Manifestation</h4> 
 
+A moving image Manifestation is the embodiment of a moving image Work or Variant. Manifestations usually include all analogue, digital and online media associated with a particular embodiment of a Work or Variant.<br><br>
+
+
+<i>Properties</i>
+<br><br>
+<table>
+  <tr>
+    <td>Property</td>
+    <td>Range</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasEvent</td>
+    <td>fiafcore:Event</td>
+    <td>An Event characterises occurrences in the lifecycle of a Moving Image Work, Variant, Manifestation or Item.</td>
+  </tr>
+</table>
+
+<br>
+<i>Example</i> 
+<br>
+<xmp><https://example.fiafcore.org/e157473b-645b-4b84-941d-fd851c32ae86> 
+    a <https://ontology.fiafcore.org/Work> .
+</xmp>
+
 <h4>Item</h4> 
+
+A moving image Item is the physical or digital product of a Manifestation of a Work or Variant, i.e. the actual copy of a Work or Variant. Whereas the Manifestation record describes the “ideal” of a particular format or publication, the Item record represents the actual holding in a repository's collection.<br><br>
+
+<i>Properties</i>
+<br><br>
+<table>
+  <tr>
+    <td>Property</td>
+    <td>Range</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasEvent</td>
+    <td>fiafcore:Event</td>
+    <td>An Event characterises occurrences in the lifecycle of a Moving Image Work, Variant, Manifestation or Item.</td>
+  </tr>
+</table>
+
+<br>
+<i>Example</i> 
+<br>
+<xmp><https://example.fiafcore.org/e157473b-645b-4b84-941d-fd851c32ae86> 
+    a <https://ontology.fiafcore.org/Work> .
+</xmp>
+
 
 <h4>Carrier</h4> 
 
+A moving image carrier is the discrete physical unit on which the moving image is retained. It can either contain the entire artistic work or a portion, for example in the case of individual film reels.
+
+
 <h4>Event</h4> 
 
+
+An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation or Item. Instances of any Event can have Activity (and Agent) relationships.
+
+
 <h4>Activity</h4> 
+
+This describes the activity or role of the Agent in relation to the moving image Work/Variant, or to make explicit the relationship(s) between the Agent and the Manifestation or Item."
+ 
 
 <h4>Agent</h4> 
 
 
+Agents, whether for works/variants, manifestations, or items in moving images, are entities involved in their creation, exploitation, or preservation, with typical distinctions including person, corporate body, family, and person group, encompassing responsibilities such as release, distribution, acquisition, or preservation.
+
+<br><br><br><br>
+
+TODO links to github, and webvowl?
 
 
 <script>
