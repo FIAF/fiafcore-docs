@@ -4,9 +4,9 @@
 
 <h4>FIAFcore</h4>
 
-The FIAFcore ontology was developed to enable the federation of filmographic data from disparate sources. It is heavily based on the language and structures of the <a href="https://www.fiafnet.org/pages/E-Resources/Cataloguing-Manual.html" style="color: crimson;">FIAF Cataloguing Manual</a>.
+The FIAFcore ontology was developed to enable the federation of filmographic data from disparate sources. It is heavily based on the language and structure of the <a href="https://www.fiafnet.org/pages/E-Resources/Cataloguing-Manual.html" style="color: crimson;">FIAF Cataloguing Manual</a>. 
 
-Key ontology elements are described below with available properties and an RDF example.
+Key ontology elements are described below, with available properties and RDF example.
 
 <h4>Work</h4>
 
@@ -23,57 +23,57 @@ A moving image Work comprises both the intellectual or artistic content and the 
   <tr>
     <td>fiafcore:hasCountry</td>
     <td>fiafcore:Country</td>
-    <td></td>
+    <td>Where known and applicable, record the geographic origin of the moving image Work. This should be the country or countries where the principal offices or production facilities of the production company or companies are located.</td>
   </tr>
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td></td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation, Item or Carrier.</td>
   </tr>
   <tr>
     <td>fiafcore:hasGenre</td>
     <td>fiafcore:Genre</td>
-    <td></td>
+    <td>Genre describes categories of Works, characterized by similar plots, themes, settings, situations, and characters.</td>
   </tr>
   <tr>
     <td>fiafcore:hasForm</td>
     <td>fiafcore:Form</td>
-    <td></td>
+    <td>Form describes the format and/or purpose of a Work.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
   <tr>
     <td>fiafcore:hasLanguageUsage</td>
     <td>fiafcore:LanguageUsage</td>
-    <td></td>
+    <td>Record the usage type of a language e.g. spoken, intertitles, subtitles, etc.</td>
   </tr>
   <tr>
     <td>fiafcore:hasManifestation</td>
     <td>fiafcore:Manifestation</td>
-    <td></td>
+    <td>Express the relationship between a moving image Work or Variant and a moving image Manifestation.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSubject</td>
     <td>fiafcore:Subject</td>
-    <td></td>
+    <td>Provide access to the Work by means of subjects (or subject identifiers) that describe the content of the Work.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTitle</td>
     <td>fiafcore:Title</td>
-    <td></td>
+    <td>Record a title, identifying phrase, or name for the moving image Work, Variant, Manifestation or Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasVariant</td>
     <td>fiafcore:Variant</td>
-    <td></td>
+    <td>Express the relationship between a moving image Work and a moving image Variant.</td>
   </tr>
   <tr>
     <td>fiafcore:hasWork</td>
     <td>fiafcore:Work</td>
-    <td></td>
+    <td>Express the relationship between a moving image Work and another moving image Work.</td>
   </tr>
 </table>
 
@@ -92,27 +92,27 @@ A moving image Variant is an entity that may be used to indicate any change to c
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td></td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation, Item or Carrier.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
   <tr>
     <td>fiafcore:hasLanguageUsage</td>
     <td>fiafcore:LanguageUsage</td>
-    <td></td>
+    <td>Record the usage type of a language e.g. spoken, intertitles, subtitles, etc.</td>
   </tr>
   <tr>
     <td>fiafcore:hasManifestation</td>
     <td>fiafcore:Manifestation</td>
-    <td></td>
+    <td>Express the relationship between a moving image Work or Variant and a moving image Manifestation.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTitle</td>
     <td>fiafcore:Title</td>
-    <td></td>
+    <td>Record a title, identifying phrase, or name for the moving image Work, Variant, Manifestation or Item.</td>
   </tr>
 </table>
 
@@ -131,52 +131,52 @@ A moving image Manifestation is the embodiment of a moving image Work or Variant
   <tr>
     <td>fiafcore:hasColourCharacteristic</td>
     <td>fiafcore:ColourCharacteristic</td>
-    <td></td>
+    <td>The presence of colour(s), tone(s), etc. in a Manifestation or an Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td></td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation, Item or Carrier.</td>
   </tr>
   <tr>
     <td>fiafcore:hasExtent</td>
     <td>fiafcore:Extent</td>
-    <td></td>
+    <td>The concept of extent as applied to Manifestations is the “ideal” logical, physical, or temporal (duration) units and not a description of a real physical object. Actual objects in the collection are described at the Item level.</td>
   </tr>
   <tr>
     <td>fiafcore:hasFormat</td>
     <td>fiafcore:Format</td>
-    <td></td>
+    <td>The medium on or the encoding format in which the moving image Manifestation or Item is fixed.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
   <tr>
     <td>fiafcore:hasImageCharacteristic</td>
     <td>fiafcore:ImageCharacteristic</td>
-    <td></td>
+    <td>The image characteristics of a moving image Manifestation or Item include aspect ratio and aperture or image format.</td>
   </tr>
   <tr>
     <td>fiafcore:hasItem</td>
     <td>fiafcore:Item</td>
-    <td></td>
+    <td>Express the relationship between a moving image Manifestation and a moving image Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasLanguageUsage</td>
     <td>fiafcore:LanguageUsage</td>
-    <td></td>
+    <td>Record the usage type of a language e.g. spoken, intertitles, subtitles, etc.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSoundCharacteristic</td>
     <td>fiafcore:SoundCharacteristic</td>
-    <td></td>
+    <td>Technical specifications relating to the fixation of sound in a moving image Manifestation or moving image Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTitle</td>
     <td>fiafcore:Title</td>
-    <td></td>
+    <td>Record a title, identifying phrase, or name for the moving image Work, Variant, Manifestation or Item.</td>
   </tr>
 </table>
 
@@ -195,107 +195,112 @@ A moving image Item is the physical or digital product of a Manifestation of a W
   <tr>
     <td>fiafcore:hasBase</td>
     <td>fiafcore:Base</td>
-    <td></td>
+    <td>The physical material or video format on which the Item is captured.</td>
   </tr>
   <tr>
     <td>fiafcore:hasBroadcastStandard</td>
     <td>fiafcore:BroadcastStandard</td>
-    <td></td>
+    <td>The broadcast standard for a video or DVD/BluRay.</td>
   </tr>
   <tr>
     <td>fiafcore:hasCarrier</td>
     <td>fiafcore:Carrier</td>
-    <td></td>
+    <td>Express the relationship between a moving image Item and a moving image Carrier.</td>
+  </tr>
+  <tr>
+    <td>fiafcore:hasColourCharacteristic</td>
+    <td>fiafcore:ColourCharacteristic</td>
+    <td>The presence of colour(s), tone(s), etc. in a Manifestation or an Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td></td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation, Item or Carrier.</td>
   </tr>
   <tr>
     <td>fiafcore:hasExtent</td>
     <td>fiafcore:Extent</td>
-    <td></td>
+    <td>The concept of extent as applied to Manifestations is the “ideal” logical, physical, or temporal (duration) units and not a description of a real physical object. Actual objects in the collection are described at the Item level.</td>
   </tr>
   <tr>
     <td>fiafcore:hasFormat</td>
     <td>fiafcore:Format</td>
-    <td></td>
+    <td>The medium on or the encoding format in which the moving image Manifestation or Item is fixed.</td>
   </tr>
   <tr>
     <td>fiafcore:hasFrameRate</td>
     <td>fiafcore:FrameRate</td>
-    <td></td>
+    <td>Frame rate is the native frame rate for the Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasHoldingInstitution</td>
     <td>fiafcore:HoldingInstitution</td>
-    <td></td>
+    <td>Record the name of the institution possessing the moving image Item or authorised to make it available.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
   <tr>
     <td>fiafcore:hasImageCharacteristic</td>
     <td>fiafcore:ImageCharacteristic</td>
-    <td></td>
+    <td>The image characteristics of a moving image Manifestation or Item include aspect ratio and aperture or image format.</td>
   </tr>
   <tr>
     <td>fiafcore:hasLineStandard</td>
     <td>fiafcore:LineStandard</td>
-    <td></td>
+    <td>Describes the number of scan lines which make up the image and indicates the resolution.</td>
   </tr>
   <tr>
     <td>fiafcore:hasResolution</td>
     <td>fiafcore:Resolution</td>
-    <td></td>
+    <td>Note whether the Item's resolution is Standard Definition, High Definition.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSoundCharacteristic</td>
     <td>fiafcore:SoundCharacteristic</td>
-    <td></td>
+    <td>Technical specifications relating to the fixation of sound in a moving image Manifestation or moving image Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSourceDevice</td>
     <td>fiafcore:SourceDevice</td>
-    <td></td>
+    <td>Record the source playback device used in transfer projects. This can be a video deck, film printer, or hardware.</td>
   </tr>
   <tr>
     <td>fiafcore:hasSourceSoftware</td>
     <td>fiafcore:SourceSoftware</td>
-    <td></td>
+    <td>Record the source software used in creating a digital file.</td>
   </tr>
   <tr>
     <td>fiafcore:hasStatus</td>
     <td>fiafcore:Status</td>
-    <td></td>
+    <td>Description of the preservation or access status of the Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasStock</td>
     <td>fiafcore:Stock</td>
-    <td></td>
+    <td>Describes the specific stock/brand on which the Item is captured.</td>
   </tr>
   <tr>
     <td>fiafcore:hasStream</td>
     <td>fiafcore:Stream</td>
-    <td></td>
+    <td>Record the components of the digital file.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTitle</td>
     <td>fiafcore:Title</td>
-    <td></td>
+    <td>Record a title, identifying phrase, or name for the moving image Work, Variant, Manifestation or Item.</td>
   </tr>
   <tr>
     <td>fiafcore:hasTransferSpeed</td>
     <td>fiafcore:TransferSpeed</td>
-    <td></td>
+    <td>Record the transfer speed, if different from the frame rate.</td>
   </tr>
   <tr>
     <td>fiafcore:isElement</td>
     <td>fiafcore:Element</td>
-    <td></td>
+    <td>Record the nature or function of the moving image Item, describing its place in the photochemical or digital production or duplication process.</td>
   </tr>
 </table>
 
@@ -314,12 +319,12 @@ A moving image carrier is the discrete physical unit on which the moving image i
   <tr>
     <td>fiafcore:hasEvent</td>
     <td>fiafcore:Event</td>
-    <td></td>
+    <td>An Event characterises occurrences in the lifecycle of a moving image Work, Variant, Manifestation, Item or Carrier.</td>
   </tr>
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
 </table>
 
@@ -338,7 +343,7 @@ An Event characterises occurrences in the lifecycle of a moving image Work, Vari
   <tr>
     <td>fiafcore:hasActivity</td>
     <td>fiafcore:Activity</td>
-    <td></td>
+    <td>Express the relationship between an Event and an Activity.</td>
   </tr>
 </table>
 
@@ -357,7 +362,7 @@ This describes the activity or role of the Agent in relation to the moving image
   <tr>
     <td>fiafcore:hasAgent</td>
     <td>fiafcore:Agent</td>
-    <td></td>
+    <td>Express the relationship between an Activity and an Agent.</td>
   </tr>
 </table>
 
@@ -376,7 +381,7 @@ Agents, whether for works/variants, manifestations, or items in moving images, a
   <tr>
     <td>fiafcore:hasIdentifier</td>
     <td>fiafcore:Identifier</td>
-    <td></td>
+    <td>An Identifier refers to a specific entity and provides clear disambiguation between entities to avoid confusion.</td>
   </tr>
 </table>
 
