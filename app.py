@@ -68,7 +68,7 @@ def ontology():
         string += '<i>Properties</i><br><br>'
         string += '<table><tr><td>Property</td><td>Range</td><td>Description</td></tr>'
         props = [s for s,p,o in g.triples((None, rdflib.RDFS.domain, entity))]
-        for p in props:
+        for p in sorted(props):
             prop = f'fiaf:{pathlib.Path(p).name}'
             rang = pull_attribute(p, rdflib.RDFS.range) # TODO, you need to replace xml schema prefix.
             if 'fiafcore' in rang:
