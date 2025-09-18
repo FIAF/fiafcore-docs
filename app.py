@@ -73,6 +73,8 @@ def ontology():
             rang = pull_attribute(p, rdflib.RDFS.range) # TODO, you need to replace xml schema prefix.
             if 'fiafcore' in rang:
                 rang = f'fiaf:{pathlib.Path(rang).name}'
+            else:
+                rang = rang.replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')                
             desc = str(pull_attribute(p, rdflib.URIRef('http://purl.org/dc/elements/1.1/description')))
             string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
         string += '</table>'
