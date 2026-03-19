@@ -1,0 +1,8 @@
+---
+services:
+  docs:
+    image: fiafcore-docs
+    container_name: fiafcore-docs
+    restart: always
+    ports:
+      - "5027:5027"

@@ -8,8 +8,9 @@ def pull_attribute(e, p):
 
     x = [c for a,b,c in g.triples((e, p, None))]
     if len(x) != 1:
-        raise Exception('Single value expected.')
-    
+        print(c)
+        raise Exception(f'Single value expected {x}.')
+
     return x[0]
 
 app = Flask(__name__)
@@ -22,7 +23,7 @@ g = rdflib.Graph().parse(data=r.text)
 
 # parsing entity to remove all unionOf nodes.
 
-query = ''' 
+query = '''
     select ?subject ?union_domain where {
         ?subject rdfs:domain ?domain .
         ?domain owl:unionOf ?a .
@@ -49,14 +50,14 @@ def ontology():
 
     string = ''
     for entity in [
-        rdflib.URIRef('https://ontology.fiafcore.org/Work'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Variant'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Manifestation'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Item'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Carrier'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Event'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Activity'),
-        rdflib.URIRef('https://ontology.fiafcore.org/Agent'),        
+        rdflib.URIRef('https://dev.fiafcore.org/Work'),
+        rdflib.URIRef('https://dev.fiafcore.org/Variant'),
+        rdflib.URIRef('https://dev.fiafcore.org/Manifestation'),
+        rdflib.URIRef('https://dev.fiafcore.org/Item'),
+        rdflib.URIRef('https://dev.fiafcore.org/Carrier'),
+        rdflib.URIRef('https://dev.fiafcore.org/Event'),
+        rdflib.URIRef('https://dev.fiafcore.org/Activity'),
+        rdflib.URIRef('https://dev.fiafcore.org/Agent'),
     ]:
 
         label = pull_attribute(entity, rdflib.RDFS.label)
@@ -74,7 +75,7 @@ def ontology():
             if 'fiafcore' in rang:
                 rang = f'fiaf:{pathlib.Path(rang).name}'
             else:
-                rang = rang.replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')                
+                rang = rang.replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')
             desc = str(pull_attribute(p, rdflib.URIRef('http://purl.org/dc/elements/1.1/description')))
             string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
         string += '</table>'

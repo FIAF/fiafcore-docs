@@ -1,0 +1,4 @@
+Flask==2.3.2
+gunicorn==20.0.4
+rdflib==7.1.4
+requests==2.31.0
