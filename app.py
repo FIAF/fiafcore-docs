@@ -80,7 +80,13 @@ def ontology():
             string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
         string += '</table>'
 
-        string += '<br>EXAMPLE HERE<br>'
+        string += '<br><i>Example</i><br><br>'
+
+        example_type = pathlib.Path(entity).name
+        with open(pathlib.Path.cwd() / 'examples' / f'{example_type}.ttl') as example:
+            example = example.read()
+
+        string += f'<pre><code class="language-turtle">{example}</code></pre>'
 
     return render_template('ontology.html', data=string)
 

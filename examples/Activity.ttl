@@ -1,0 +1,8 @@
+@prefix fiaf: <https://dev.fiafcore.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fiaf:780c0066-9ec5-4737-b901-8647c14f43f9 a fiaf:MonographicWork ;
+    fiaf:hasEvent [ a fiaf:ProductionEvent ;
+            fiaf:hasActivity [ a fiaf:Director ;
+                    fiaf:hasAgent fiaf:73f251b4-7a79-40f9-8275-93236b106d39 ] ;
+            fiaf:hasEventDate "1924" ] .
