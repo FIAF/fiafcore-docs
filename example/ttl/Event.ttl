@@ -3,5 +3,6 @@
 
 _:blankNode1
     a fiaf:ProductionEvent ;
+    rdfs:label "Metropolis Event" ;
     fiaf:hasActivity _:blankNode2 ;
     fiaf:hasDate "1924" .

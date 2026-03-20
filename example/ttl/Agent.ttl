@@ -6,5 +6,5 @@
     rdfs:label "Brigitte Helm" ;
     fiaf:hasIdentifier [ a fiaf:Identifier ;
         fiaf:hasIdentifierAuthority
-            <https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0 > ;
+            <https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0> ;
         fiaf:hasIdentifierValue "222178" ] .

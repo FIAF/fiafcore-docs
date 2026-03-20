@@ -3,6 +3,7 @@
 
 <https://example.fiafcore.org/732fce4e-9738-4501-bc5f-f9243db387af>
     a fiaf:Item ;
+    rdfs:label "Metropolis Item" ;
     fiaf:hasBase fiaf:PolyesterBase ;
     fiaf:hasCarrier
         <https://example.fiafcore.org/005ecbf8-1693-4986-8fef-43f55436dfe8> ;

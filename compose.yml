@@ -1,8 +1,14 @@
 ---
 services:
   docs:
-    image: fiafcore-docs
-    container_name: fiafcore-docs
+    image: fiafcore-docs-dev
+    container_name: fiafcore-docs-dev
     restart: always
     ports:
       - "5086:5086"
+  example:
+    image: fiafcore-docs-example
+    container_name: fiafcore-docs-example
+    restart: always
+    ports:
+      - "5087:5087"

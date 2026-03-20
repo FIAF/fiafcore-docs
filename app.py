@@ -67,7 +67,7 @@ def ontology():
         string += f'{desc}<br><br>'
 
         string += '<i>Properties</i><br><br>'
-        string += '<table><tr><td>Property</td><td>Range</td><td>Description</td></tr>'
+        string += "<table><tr style='background-color: grey;color: white'><td><b>Property</b></td><td><b>Range</b></td><td><b>Description</b></td></tr>"
         props = [s for s,p,o in g.triples((None, rdflib.RDFS.domain, entity))]
         for p in sorted(props):
             prop = f'fiaf:{pathlib.Path(p).name}'
@@ -83,7 +83,7 @@ def ontology():
         string += '<br><i>Example</i><br><br>'
 
         example_type = pathlib.Path(entity).name
-        with open(pathlib.Path.cwd() / 'example' / f'{example_type}.ttl') as example:
+        with open(pathlib.Path.cwd() / 'example' / 'ttl' / f'{example_type}.ttl') as example:
             example = example.read()
             example = example.replace('<', '&lt;')
             example = example.replace('>', '&gt;')

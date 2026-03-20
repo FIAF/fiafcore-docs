@@ -1,7 +1,11 @@
-# build fiafcore-docs image
+# build fiafcore-docs-dev image.
 
-docker build -t fiafcore-docs .
+docker build -t fiafcore-docs-dev .
 
-# deploy fiafcore-docs container.
+# build fiafcore-docs-example image.
+
+docker build -t fiafcore-docs-example example
+
+# deploy fiafcore-docs containers.
 
 docker compose up -d

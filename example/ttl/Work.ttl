@@ -3,6 +3,7 @@
 
 <https://example.fiafcore.org/77566b79-9889-4772-adff-8640a0f6287e>
     a fiaf:MonographicWork ;
+    rdfs:label "Metropolis" ;
     fiaf:hasCountry fiaf:Germany ;
     fiaf:hasEvent _:blankNode1 ;
     fiaf:hasForm fiaf:FeatureFilm ;
