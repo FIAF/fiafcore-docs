@@ -83,8 +83,10 @@ def ontology():
         string += '<br><i>Example</i><br><br>'
 
         example_type = pathlib.Path(entity).name
-        with open(pathlib.Path.cwd() / 'examples' / f'{example_type}.ttl') as example:
+        with open(pathlib.Path.cwd() / 'example' / f'{example_type}.ttl') as example:
             example = example.read()
+            example = example.replace('<', '&lt;')
+            example = example.replace('>', '&gt;')
 
         string += f'<pre><code class="language-turtle">{example}</code></pre>'
 

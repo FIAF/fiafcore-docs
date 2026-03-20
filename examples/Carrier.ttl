@@ -1,9 +1,0 @@
-@prefix fiaf: <https://dev.fiafcore.org/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
-fiaf:f94c4b5f-7268-4321-a1e3-01ba892f867a a fiaf:Carrier ;
-    fiaf:hasIdentifier <bundesarchiv://identifier/carrier/7a1a83b1-58f5-455e-b46a-ff09556e18d2> .
-
-<bundesarchiv://identifier/carrier/7a1a83b1-58f5-455e-b46a-ff09556e18d2> a fiaf:Identifier ;
-    fiaf:hasIdentifierAuthority fiaf:b20ba1cc-cf23-4ccb-8580-396e6dd05333 ;
-    fiaf:hasIdentifierValue "7a1a83b1-58f5-455e-b46a-ff09556e18d2" .
