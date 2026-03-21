@@ -8,7 +8,7 @@ construct {
 
   SUBJECT_URI fiaf:hasCountry ?country .
   ?country rdfs:label ?countryLabel .
-  fiaf:hasCountry rdfs:label ?formCountryLabel .
+  fiaf:hasCountry rdfs:label ?countryPropLabel .
 
   SUBJECT_URI fiaf:hasEvent ?event .
   fiaf:hasEvent rdfs:label ?eventPropLabel .
@@ -69,7 +69,7 @@ where {
   optional {
     SUBJECT_URI fiaf:hasCountry ?country .
     ?country rdfs:label ?countryLabel .
-    fiaf:hasCountry rdfs:label ?formCountryLabel .
+    fiaf:hasCountry rdfs:label ?countryPropLabel .
   }
   optional {
     SUBJECT_URI fiaf:hasEvent ?event .

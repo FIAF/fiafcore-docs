@@ -5,7 +5,7 @@
 
 {% set subject_data = data | selectattr("@id", "equalto", resource) | first %}
 
-<!--{{ subject_data }}-->
+<!--{{ data }}-->
 
 <b>id</b> {{ subject_data['@id'] }} <br><br>
 <b>type</b> {{ subject_data['@type'] }} <br><br>

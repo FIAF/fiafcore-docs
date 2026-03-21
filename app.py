@@ -42,6 +42,31 @@ for a,b,c in g.triples((None, None, None)):
     if type(a) is type(rdflib.BNode('')) or type(b) is type(rdflib.BNode('')):
         g.remove(( a, b, c))
 
+def subclasses(parent):
+
+    # fiafcore_path = pathlib.Path.cwd() / 'fiafcore.ttl'
+    # if not fiafcore_path.exists():
+    #     raise Exception('Local ontology file not found.')
+
+    # fiafcore = rdflib.Graph().parse(fiafcore_path)
+    query = """
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT ?subClass
+        WHERE {
+            ?subClass rdfs:subClassOf+ <"""+parent+"""> .
+        }
+    """
+    result = [row.subClass for row in g.query(query)]
+    result.append(rdflib.URIRef(parent))
+
+    return result
+
+agent_classes = subclasses('https://dev.fiafcore.org/Agent')
+work_classes = subclasses('https://dev.fiafcore.org/Work')
+manifestation_classes = subclasses('https://dev.fiafcore.org/Manifestation')
+item_classes = subclasses('https://dev.fiafcore.org/Item')
+carrier_classes = subclasses('https://dev.fiafcore.org/Carrier')
+
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
@@ -110,6 +135,9 @@ def page(resource):
 
     print(resource)
 
+    # these should move to top level so they are not processing for each page.
+    # although - longterm they will be sparql queries not local graph queries.
+
     resource_graph = rdflib.Graph().parse(pathlib.Path.cwd() / 'graph.ttl')
     resources = [pathlib.Path(s).name for s,p,o in resource_graph.triples((None, None, None))]
     ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
@@ -117,24 +145,46 @@ def page(resource):
 
         data='ontology'
 
+        raise Exception('Ontology')
+
         return render_template('entity.html', data=data)
 
     elif resource in resources:
 
         namespace = 'https://dev.fiafcore.org/'
-        subject_uri = f'<{namespace}{resource}>'
+        subject_uri = f'{namespace}{resource}'
 
         # load by type, so here we have a SPARQL query for work type
         # which means we need to pull type from resource, to begin with
         # and then load up the sparql to issue to the triplestore.
 
-        # if superclass is work:
+        subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
+        if not len(subject_types):
+            raise Exception('Type could not be detected.')
+        subject_type = subject_types[0]
 
-        with open(pathlib.Path.cwd() / 'shapes' / 'work.sparql') as shape:
-            shape = shape.read()
-            shape = shape.replace('SUBJECT_URI', subject_uri)
+        if subject_type in work_classes:
+            shape = 'work'
+        elif subject_type in manifestation_classes:
+            shape = 'manifestation'
+        elif subject_type in item_classes:
+            shape = 'item'
+        elif subject_type in carrier_classes:
+            shape = 'carrier'
+        elif subject_type in agent_classes:
+            shape = 'agent'
+        else:
+            raise Exception('Shape not determined.')
 
-        result = resource_graph.query(shape)
+        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+        if not shape_path.exists():
+            raise Exception('Shape file not found.')
+
+        with open(shape_path) as construct:
+            construct = construct.read()
+            construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+
+        result = resource_graph.query(construct)
         data = result.serialize(format="json-ld").decode()
         data = json.loads(data)
 
