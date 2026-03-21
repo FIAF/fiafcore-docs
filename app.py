@@ -1,12 +1,13 @@
+import json
 import pathlib
 import requests
 import rdflib
 from flask import Flask
 from flask import render_template
 
-def pull_attribute(e, p):
+def pull_attribute(e, p, gr):
 
-    x = [c for a,b,c in g.triples((e, p, None))]
+    x = [c for a,b,c in gr.triples((e, p, None))]
     if len(x) != 1:
         print(c)
         raise Exception(f'Single value expected {x}.')
@@ -60,10 +61,10 @@ def ontology():
         rdflib.URIRef('https://dev.fiafcore.org/Agent'),
     ]:
 
-        label = pull_attribute(entity, rdflib.RDFS.label)
+        label = pull_attribute(entity, rdflib.RDFS.label, g)
         string += f'<h4>{label}</h4>'
 
-        desc = pull_attribute(entity, rdflib.URIRef('http://purl.org/dc/elements/1.1/description'))
+        desc = pull_attribute(entity, rdflib.URIRef('http://purl.org/dc/elements/1.1/description'), g)
         string += f'{desc}<br><br>'
 
         string += '<i>Properties</i><br><br>'
@@ -71,12 +72,12 @@ def ontology():
         props = [s for s,p,o in g.triples((None, rdflib.RDFS.domain, entity))]
         for p in sorted(props):
             prop = f'fiaf:{pathlib.Path(p).name}'
-            rang = pull_attribute(p, rdflib.RDFS.range) # TODO, you need to replace xml schema prefix.
+            rang = pull_attribute(p, rdflib.RDFS.range, g) # TODO, you need to replace xml schema prefix.
             if 'fiafcore' in rang:
                 rang = f'fiaf:{pathlib.Path(rang).name}'
             else:
                 rang = rang.replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')
-            desc = str(pull_attribute(p, rdflib.URIRef('http://purl.org/dc/elements/1.1/description')))
+            desc = str(pull_attribute(p, rdflib.URIRef('http://purl.org/dc/elements/1.1/description'), g))
             string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
         string += '</table>'
 
@@ -103,6 +104,44 @@ def access():
 @app.route('/licence', methods=['GET'])
 def licence():
     return render_template('licence.html')
+
+@app.route('/<resource>', methods=['GET'])
+def page(resource):
+
+    print(resource)
+
+    resource_graph = rdflib.Graph().parse(pathlib.Path.cwd() / 'graph.ttl')
+    resources = [pathlib.Path(s).name for s,p,o in resource_graph.triples((None, None, None))]
+    ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
+    if resource in ontology:
+
+        data='ontology'
+
+        return render_template('entity.html', data=data)
+
+    elif resource in resources:
+
+        namespace = 'https://dev.fiafcore.org/'
+        subject_uri = f'<{namespace}{resource}>'
+
+        # load by type, so here we have a SPARQL query for work type
+        # which means we need to pull type from resource, to begin with
+        # and then load up the sparql to issue to the triplestore.
+
+        # if superclass is work:
+
+        with open(pathlib.Path.cwd() / 'shapes' / 'work.sparql') as shape:
+            shape = shape.read()
+            shape = shape.replace('SUBJECT_URI', subject_uri)
+
+        result = resource_graph.query(shape)
+        data = result.serialize(format="json-ld").decode()
+        data = json.loads(data)
+
+        return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
+    else:
+        return render_template('error.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

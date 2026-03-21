@@ -1,4 +1,4 @@
-
+import json
 import pathlib
 import rdflib
 from flask import Flask
@@ -33,7 +33,7 @@ app = Flask(__name__)
 
 
 @app.route('/<resource>', methods=['GET'])
-def home(resource):
+def page(resource):
 
     if resource in [pathlib.Path(x).name for x in valid_uris]:
         # if resource not in valid uris, throw a 404
@@ -45,9 +45,16 @@ def home(resource):
         for s,p,o in graph.triples((subject_uri, None, None)):
             subject_graph.add((s,p,o))
 
+            # if property x, and build out specific type graphs
+            # based on type detectionm obvs
+            # you could even use json schema as "diy shacl"
+
+        subject_graph = subject_graph.serialize(format='json-ld')
+        subject_graph = json.loads(subject_graph)[0]
+
 
         # hmm
 
-        return render_template('hello.html', data=subject_graph.serialize(format='json-ld'))
+        return render_template('entity.html', data=subject_graph)
     else:
         return render_template('error.html')
