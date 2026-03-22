@@ -143,20 +143,48 @@ def page(resource):
     ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
     if resource in ontology:
 
-        data='ontology'
+        namespace = 'https://dev.fiafcore.org/'
+        subject_uri = f'{namespace}{resource}'
 
-        raise Exception('Ontology')
+        subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
+        if not len(subject_types):
+            raise Exception('Type could not be detected.')
+        subject_type = subject_types[0]
 
-        return render_template('entity.html', data=data)
+        if rdflib.URIRef(subject_type) == rdflib.OWL.Class:
+            shape = 'class'
+        elif rdflib.URIRef(subject_type) == rdflib.OWL.DatatypeProperty:
+            shape = 'property'
+        elif rdflib.URIRef(subject_type) == rdflib.OWL.ObjectProperty:
+            shape = 'property'
+        else:
+            raise Exception('Shape not determined.')
+
+        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+        if not shape_path.exists():
+            raise Exception('Shape file not found.')
+
+        with open(shape_path) as construct:
+            construct = construct.read()
+            construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+
+        resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
+        resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
+        resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+        resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
+        resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
+        resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
+
+        result = resource_graph.query(construct)
+        data = result.serialize(format="json-ld").decode()
+        data = json.loads(data)
+
+        return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
 
     elif resource in resources:
 
         namespace = 'https://dev.fiafcore.org/'
         subject_uri = f'{namespace}{resource}'
-
-        # load by type, so here we have a SPARQL query for work type
-        # which means we need to pull type from resource, to begin with
-        # and then load up the sparql to issue to the triplestore.
 
         subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
         if not len(subject_types):
@@ -183,6 +211,13 @@ def page(resource):
         with open(shape_path) as construct:
             construct = construct.read()
             construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+
+        resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
+        resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
+        resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+        resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
+        resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
+        resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
 
         result = resource_graph.query(construct)
         data = result.serialize(format="json-ld").decode()

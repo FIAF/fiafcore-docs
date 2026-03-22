@@ -1,0 +1,44 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix fiaf: <https://dev.fiafcore.org/>
+
+construct {
+
+  SUBJECT_URI rdf:type ?type .
+
+  SUBJECT_URI dc:description ?description .
+  dc:description rdfs:label ?descriptionPropLabel .
+
+  SUBJECT_URI dc:source ?source .
+  dc:source rdfs:label ?sourcePropLabel .
+
+  SUBJECT_URI  rdfs:domain ?domain .
+  ?domain rdfs:label ?domainLabel .
+  rdfs:domain rdfs:label ?domainPropLabel .
+
+  SUBJECT_URI  rdfs:range ?range .
+  ?range rdfs:label ?rangeLabel .
+  rdfs:range rdfs:label ?rangePropLabel .
+
+}
+where {
+  SUBJECT_URI rdf:type ?type .
+  optional {
+    SUBJECT_URI dc:description ?description .
+    dc:description rdfs:label ?descriptionPropLabel .
+  }
+  optional {
+    SUBJECT_URI dc:source ?source .
+    dc:source rdfs:label ?sourcePropLabel .
+  }
+  optional {
+    SUBJECT_URI  rdfs:domain ?domain .
+    ?domain rdfs:label ?domainLabel .
+    rdfs:domain rdfs:label ?domainPropLabel .
+  }
+  optional {
+    SUBJECT_URI  rdfs:range ?range .
+    ?range rdfs:label ?rangeLabel .
+    rdfs:range rdfs:label ?rangePropLabel .
+  }
+}

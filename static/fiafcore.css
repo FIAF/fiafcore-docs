@@ -10,7 +10,7 @@ body {
 
 .menu-item {
     background-color: white;
-    margin: 8px; 
+    margin: 8px;
     text-align: center;
     padding-left: 40px;
     padding-right: 40px;
@@ -41,4 +41,10 @@ td {
     border: 1px solid #dddddd;
     padding: 10px;
     text-align: left;
+}
+
+.title {
+    color: black;
+    font-weight: 100;
+    font-size: 32px;
 }

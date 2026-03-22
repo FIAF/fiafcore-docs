@@ -1,0 +1,164 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix fiaf: <https://dev.fiafcore.org/>
+
+construct {
+
+  SUBJECT_URI rdf:type ?type .
+
+  SUBJECT_URI fiaf:hasBase ?base .
+  ?base rdfs:label ?baseLabel .
+  fiaf:hasBase rdfs:label ?basePropLabel .
+
+  SUBJECT_URI fiaf:hasBroadcastStandard ?broadcastStandard .
+  ?broadcastStandard rdfs:label ?broadcastStandardLabel .
+  fiaf:hasBroadcastStandard rdfs:label ?broadcastStandardPropLabel .
+
+  SUBJECT_URI fiaf:hasCarrier ?carrier .
+  ?carrier rdfs:label ?carrierLabel .
+  fiaf:hasCarrier rdfs:label ?carrierPropLabel .
+
+  SUBJECT_URI fiaf:hasColourCharacteristic ?colourCharacteristic .
+  fiaf:hasColourCharacteristic rdfs:label ?colourCharacteristicPropLabel .
+  ?colourCharacteristic rdf:type ?colourCharacteristicType .
+  ?colourCharacteristicType rdfs:label ?colourCharacteristicTypeLabel .
+
+  ?colourCharacteristic fiaf:hasColourStandard ?colourStandard .
+  fiaf:hasColourStandard rdfs:label ?colourStandardPropLabel .
+  ?colourStandard rdf:type ?colourStandardType .
+  ?colourStandardType rdfs:label ?colourStandardTypeLabel .
+
+  SUBJECT_URI fiaf:hasFormat ?format .
+  ?format rdfs:label ?formatLabel .
+  fiaf:hasFormat rdfs:label ?formatPropLabel .
+
+  SUBJECT_URI fiaf:hasHoldingInstitution ?holdingInstitution .
+  ?holdingInstitution rdfs:label ?holdingInstitutionLabel .
+  fiaf:hasHoldingInstitution rdfs:label ?holdingInstitutionPropLabel .
+
+  SUBJECT_URI fiaf:hasIdentifier ?identifier .
+  fiaf:hasIdentifier rdfs:label ?identifierPropLabel .
+  ?identifier rdf:type ?identifierType .
+  ?identifierType rdfs:label ?identifierTypeLabel .
+  ?identifier fiaf:hasIdentifierValue ?identifierValue .
+  fiaf:hasIdentifierValue rdfs:label ?identifierValuePropLabel .
+  ?identifier fiaf:hasIdentifierAuthority ?identifierAuthority .
+  fiaf:hasIdentifierAuthority rdfs:label ?identifierAuthorityPropLabel .
+  ?identifierAuthority rdfs:label ?identifierAuthorityLabel .
+
+  SUBJECT_URI fiaf:hasSoundCharacteristic ?soundCharacteristic .
+  fiaf:hasSoundCharacteristic rdfs:label ?soundCharacteristicPropLabel .
+  ?soundCharacteristic rdf:type ?soundCharacteristicType .
+  ?soundCharacteristicType rdfs:label ?soundCharacteristicTypeLabel .
+
+  ?soundCharacteristic fiaf:hasSoundStandard ?soundStandard .
+  fiaf:hasSoundStandard rdfs:label ?soundStandardPropLabel .
+  ?soundStandard rdf:type ?soundStandardType .
+  ?soundStandardType rdfs:label ?soundStandardTypeLabel .
+
+  SUBJECT_URI fiaf:hasStatus ?status .
+  ?status rdfs:label ?statusLabel .
+  fiaf:hasStatus rdfs:label ?statusPropLabel .
+
+  SUBJECT_URI fiaf:hasStock ?stock .
+  ?stock rdfs:label ?stockLabel .
+  fiaf:hasStock rdfs:label ?stockPropLabel .
+
+  SUBJECT_URI fiaf:hasTitle ?title .
+  fiaf:hasTitle rdfs:label ?titlePropLabel .
+  ?title rdf:type ?titleType .
+  ?titleType rdfs:label ?titleTypeLabel .
+  ?title fiaf:hasTitleValue ?titleValue .
+  fiaf:hasTitleValue rdfs:label ?titleValuePropLabel .
+
+  SUBJECT_URI fiaf:isElement ?element .
+  ?element rdfs:label ?elementLabel .
+  fiaf:isElement rdfs:label ?elementPropLabel .
+
+}
+where {
+  SUBJECT_URI rdf:type ?type .
+  optional {
+    SUBJECT_URI fiaf:hasBase ?base .
+    ?base rdfs:label ?baseLabel .
+    fiaf:hasBase rdfs:label ?basePropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasBroadcastStandard ?broadcastStandard .
+    ?broadcastStandard rdfs:label ?broadcastStandardLabel .
+    fiaf:hasBroadcastStandard rdfs:label ?broadcastStandardPropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasCarrier ?carrier .
+    ?carrier rdfs:label ?carrierLabel .
+    fiaf:hasCarrier rdfs:label ?carrierPropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasColourCharacteristic ?colourCharacteristic .
+    fiaf:hasColourCharacteristic rdfs:label ?colourCharacteristicPropLabel .
+    ?colourCharacteristic rdf:type ?colourCharacteristicType .
+    ?colourCharacteristicType rdfs:label ?colourCharacteristicTypeLabel .
+    optional{
+      ?colourCharacteristic fiaf:hasColourStandard ?colourStandard .
+      fiaf:hasColourStandard rdfs:label ?colourStandardPropLabel .
+      ?colourStandard rdf:type ?colourStandardType .
+      ?colourStandardType rdfs:label ?colourStandardTypeLabel .
+    }
+  }
+  optional {
+    SUBJECT_URI fiaf:hasFormat ?format .
+    ?format rdfs:label ?formatLabel .
+    fiaf:hasFormat rdfs:label ?formatPropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasHoldingInstitution ?holdingInstitution .
+    ?holdingInstitution rdfs:label ?holdingInstitutionLabel .
+    fiaf:hasHoldingInstitution rdfs:label ?holdingInstitutionPropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasIdentifier ?identifier .
+    fiaf:hasIdentifier rdfs:label ?identifierPropLabel .
+    ?identifier rdf:type ?identifierType .
+    ?identifierType rdfs:label ?identifierTypeLabel .
+    ?identifier fiaf:hasIdentifierValue ?identifierValue .
+    fiaf:hasIdentifierValue rdfs:label ?identifierValuePropLabel .
+    ?identifier fiaf:hasIdentifierAuthority ?identifierAuthority .
+    fiaf:hasIdentifierAuthority rdfs:label ?identifierAuthorityPropLabel .
+    ?identifierAuthority rdfs:label ?identifierAuthorityLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasSoundCharacteristic ?soundCharacteristic .
+    fiaf:hasSoundCharacteristic rdfs:label ?soundCharacteristicPropLabel .
+    ?soundCharacteristic rdf:type ?soundCharacteristicType .
+    ?soundCharacteristicType rdfs:label ?soundCharacteristicTypeLabel .
+    optional{
+      ?soundCharacteristic fiaf:hasSoundStandard ?soundStandard .
+      fiaf:hasSoundStandard rdfs:label ?soundStandardPropLabel .
+      ?soundStandard rdf:type ?soundStandardType .
+      ?soundStandardType rdfs:label ?soundStandardTypeLabel .
+    }
+  }
+  optional {
+    SUBJECT_URI fiaf:hasStatus ?status .
+    ?status rdfs:label ?statusLabel .
+    fiaf:hasStatus rdfs:label ?statusPropLabel .
+   }
+  optional {
+    SUBJECT_URI fiaf:hasStock ?stock .
+    ?stock rdfs:label ?stockLabel .
+    fiaf:hasStock rdfs:label ?stockPropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:hasTitle ?title .
+    fiaf:hasTitle rdfs:label ?titlePropLabel .
+    ?title rdf:type ?titleType .
+    ?titleType rdfs:label ?titleTypeLabel .
+    ?title fiaf:hasTitleValue ?titleValue .
+    fiaf:hasTitleValue rdfs:label ?titleValuePropLabel .
+  }
+  optional {
+    SUBJECT_URI fiaf:isElement ?element .
+    ?element rdfs:label ?elementLabel .
+    fiaf:isElement rdfs:label ?elementPropLabel .
+  }
+}
