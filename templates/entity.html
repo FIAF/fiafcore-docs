@@ -12,15 +12,15 @@
 <br><br>
 <tspan class="title">{{ subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</tspan>
 <br>
-
-<b>id</b> {{ subject_data['@id'] }} <br><br>
-<b>type</b> {{ subject_data['@type'] }} <br><br>
+<br><div class="instep_1" style="display: inline-block;" ></div> <b>uri</b>
+  {{ subject_data['@id'] }}
+<br><div class="instep_1" style="display: inline-block;" ></div>  <b>type</b>
+    {{ subject_data['@type'] }}
 
 {% set exclude_list = ["@id", "@type", 'http://www.w3.org/2000/01/rdf-schema#label'] %}
 {% for item in subject_data %}
     {% if item not in exclude_list %}
         {% set item_data = data | selectattr("@id", "equalto", item) | first %}
-        <a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
         {% for val in subject_data[item] %}
             {% if '_:' in val['@id'] %}
@@ -29,29 +29,41 @@
 
                 {% set test = data | selectattr("@id", "equalto", val['@id']) | first %}
                 {% set bnode_data = data | selectattr("@id", "equalto", test['@type'][0]) | first %}
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
                 <a href="{{ bnode_data['@id'] }}">{{ bnode_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
 
                 {% for prop in test %}
                     {% if prop not in exclude_list %}
                         {% set prop_data = data | selectattr("@id", "equalto", prop) | first %}
-                        <a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
-                        {% for val2 in test[prop] %}
+            <!--<br><div class="instep_3" style="display: inline-block;" >  </div>-->
+              <!--<b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>-->
+
+              {% for val2 in test[prop] %}
                             {% if '_:' in val2['@id'] %}
 
                                 <!--// ANOTHER BLANK NODE //-->
 
                                 {% set test2 = data | selectattr("@id", "equalto", val2['@id']) | first  %}
                                 {% set bnode_data2 = data | selectattr("@id", "equalto", test2['@type'][0]) | first %}
-                                <a href="{{ bnode_data2['@id'] }}">{{ bnode_data2['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+<br><div class="instep_3" style="display: inline-block;" ></div>
+<b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+<a href="{{ bnode_data2['@id'] }}">{{ bnode_data2['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+
 
                                 {% for prop2 in test2 %}
                                     {% if prop2 not in exclude_list %}
 
                                         {% set prop2_data = data | selectattr("@id", "equalto", prop2) | first %}
-                                        <a href="{{ prop2 }}">{{ prop2_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
                                         {% for val3 in test2[prop2] %}
+
                                             {% if '_:' in val3['@id'] %}
 
                                                 <!--// YET ANOTHER BLANK NODE //-->
@@ -61,14 +73,12 @@
                                                 <!--// YET ANOTHER ENTITY //-->
 
                                                 {% set test4 = data | selectattr("@id", "equalto", val3['@id']) | first   %}
-                                                <a href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
-                                            {% elif 'purl.org' in val3['@id'] %}
 
-                                                <!--// YET ANOTHER ENTITY //-->
 
-                                                {% set test4 = data | selectattr("@id", "equalto", val3['@id']) | first   %}
-                                                <a href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+<br><div class="instep_5" style="display: inline-block;" ></div>  <b><a href="{{ prop2 }}">{{ prop2_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+<a href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
                                             {% else %}
@@ -84,23 +94,28 @@
 
                                 <!--// ANOTHER ENTITY //-->
 
+
+
+
                                 {% set test5 = data | selectattr("@id", "equalto", val2['@id']) | first   %}
+
+
+                                <br><div class="instep_3" style="display: inline-block;" >  </div>
+                                  <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+
+
                                 <a href="{{ val2['@id'] }}">{{ test5['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
-
-                                {% elif 'purl.org' in val2['@id'] %}
-
-                                    <!--// ANOTHER ENTITY //-->
-
-                                    {% set test5 = data | selectattr("@id", "equalto", val2['@id']) | first   %}
-                                    <a href="{{ val2['@id'] }}">{{ test5['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
                             {% else %}
 
                                 <!--// ANOTHER THING //-->
+                                <br><div class="instep_3" style="display: inline-block;" >  </div>
+                                  <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
-                                {{ val2['@value'] }}
+                                             {{ val2['@value'] }}
 
                         {% endif %}
                     {% endfor %}
@@ -114,18 +129,21 @@
                 <!--THIS IS A ENTITY //-->
 
                 {% set test = data | selectattr("@id", "equalto", val['@id']) | first | default("No Record", true)  %}
-                <a href="{{ val['@id'] }}">{{ test['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+                             <a href="{{ val['@id'] }}">{{ test['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
             {% else %}
 
                 <!--THIS IS ANOTHER THING //-->
 
-                {{ val['@value'] }}
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
+    {{ val['@value'] }}
 
             {% endif %}
-        {% endfor %}<br><br>
+        {% endfor %}
     {% endif %}
 {% endfor %}
 
@@ -133,7 +151,13 @@
 
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
-<script>let data = JSON.parse('{{ data|tojson|safe }}');</script>
+<script>let data = JSON.parse('{{ data|tojson|safe }}')</script>
+
+
+<script>
+    let resource = {{ resource|tojson|safe }};
+</script>
+
 <script src="../static/page.js"></script>
 
 {% endblock %}

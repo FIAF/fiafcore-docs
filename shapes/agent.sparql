@@ -4,6 +4,9 @@ prefix fiaf: <https://dev.fiafcore.org/>
 
 construct {
 
+  SUBJECT_URI rdfs:label ?label .
+  rdfs:label rdfs:label ?labelLabel .
+
   SUBJECT_URI rdf:type ?type .
 
   SUBJECT_URI fiaf:hasIdentifier ?identifier .
@@ -18,6 +21,8 @@ construct {
 
 }
 where {
+  SUBJECT_URI rdfs:label ?label .
+  rdfs:label rdfs:label ?labelLabel .
   SUBJECT_URI rdf:type ?type .
   optional {
     SUBJECT_URI fiaf:hasIdentifier ?identifier .
