@@ -5,10 +5,10 @@ services:
     container_name: fiafcore-docs-dev
     restart: always
     ports:
-      - "5086:5086"
-  example:
-    image: fiafcore-docs-example
-    container_name: fiafcore-docs-example
-    restart: always
-    ports:
-      - "5087:5087"
+      - "5030:5030"
+  # example:
+  #   image: fiafcore-docs-example
+  #   container_name: fiafcore-docs-example
+  #   restart: always
+  #   ports:
+  #     - "5087:5087"

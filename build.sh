@@ -4,7 +4,7 @@ docker build -t fiafcore-docs-dev .
 
 # build fiafcore-docs-example image.
 
-docker build -t fiafcore-docs-example example
+# docker build -t fiafcore-docs-example example
 
 # deploy fiafcore-docs containers.
 

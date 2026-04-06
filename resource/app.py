@@ -143,8 +143,23 @@ def entity(name):
     # now we need to detect all the properties which come off this.
     # if objects are blank nodes, then also pull those 
 
-    entity_prop = entity_properties(entity_type)
-    print('@@@', entity_prop)
+    entity_prop = sorted(entity_properties(entity_type))
+    entity_prop = [rdflib.URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')]+entity_prop
+    # print('@@@', entity_prop)
+
+
+
+    # okay now cycle through each prop and return triple statements
+    # if o is a blank node, things get interesting!
+
+
+
+
+    for prop in entity_prop:
+        print('@@@', prop)
+
+
+    # sort it and add rdftype on the front!
 
     # so need to generate a list of all expected properties, per major entity type.
 
