@@ -109,11 +109,14 @@ def ontology():
         string += '<br><i>Example</i><br><br>'
 
         example_type = pathlib.Path(entity).name
-        with open(pathlib.Path.cwd() / 'example' / 'ttl' / f'{example_type}.ttl') as example:
-            example = example.read()
-            example = example.replace('<', '&lt;')
-            example = example.replace('>', '&gt;')
+        example_path = f'https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/example/{example_type}.ttl'
+        r = requests.get(example_path)
+        if r.status_code != 200:
+            raise Exception(f'API {r.status_code}: {r.text}')
 
+        example = r.text
+        example = example.replace('<', '&lt;')
+        example = example.replace('>', '&gt;')
         string += f'<pre><code class="language-turtle">{example}</code></pre>'
 
     return render_template('ontology.html', data=string)
