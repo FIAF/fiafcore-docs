@@ -218,13 +218,16 @@ def page(resource):
 
         uri_type = uri_match[0]
 
+        if uri_type not in superclass_lookup.keys():
+            return render_template('error.html')
+
+        uri_superclass = superclass_lookup[uri_type]
 
 
 
 
 
-
-        return render_template('test.html', data=(resource, uri, len(uri_match), uri_type))
+        return render_template('test.html', data=(resource, uri, len(uri_match), uri_type, uri_superclass))
 
 
 
