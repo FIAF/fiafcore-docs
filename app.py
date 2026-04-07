@@ -17,11 +17,45 @@ def pull_attribute(e, p, gr):
 
 app = Flask(__name__)
 
+
+# pull example rdf, from web resource. Do this on flask deploy.
+
+
+example_graph = rdflib.Graph()
+for example_type in [
+    'Work',
+    'Variant',
+    'Manifestation',
+    'Item',
+    'Carrier',
+    'Event',
+    'Activity',
+    'Agent']:
+    example_path = f'https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/example/{example_type}.ttl'
+
+
+    r = requests.get(example_path)
+    if r.status_code != 200:
+        raise Exception(f'API {r.status_code}: {r.text}')
+
+    example_graph += rdflib.Graph().parse(data=r.text)
+
+    print('@@@', len(example_graph))
+
+
+#
+
+
+
+
+
 r = requests.get('https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/fiafcore.ttl')
 if r.status_code != 200:
     raise Exception('API call failed.')
 
-g = rdflib.Graph().parse(data=r.text)
+g = rdflib.Graph().parse(data=r.text) # turn this off in lieu of ontology_graph, once you have re routed.
+
+ontology_graph = rdflib.Graph().parse(data=r.text)
 
 # parsing entity to remove all unionOf nodes.
 
@@ -42,6 +76,26 @@ for a, b in g.query(query):
 for a,b,c in g.triples((None, None, None)):
     if type(a) is type(rdflib.BNode('')) or type(b) is type(rdflib.BNode('')):
         g.remove(( a, b, c))
+
+
+def superclass(graph):
+
+    """Predetermine superclasses for core child elements."""
+
+    query = """
+        prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        prefix fiaf: <https://dev.fiafcore.org/>
+        select ?parent ?child
+        where {
+            values ?parent { fiaf:Work fiaf:Variant fiaf:Manifestation fiaf:Item fiaf:Carrier fiaf:Agent }
+            ?child rdfs:subClassOf+ ?parent
+        }
+    """
+
+    return dict([(row.child, row.parent) for row in graph.query(query)])
+
+superclass_lookup = superclass(ontology_graph)
+print('**', superclass_lookup)
 
 def subclasses(parent):
 
@@ -77,6 +131,8 @@ def home():
 
 @app.route('/ontology', methods=['GET'])
 def ontology():
+    if os.getenv('INSTANCE') != 'dev':
+        return render_template('error.html')
 
     string = ''
     for entity in [
@@ -127,18 +183,52 @@ def ontology():
 
 @app.route('/sources', methods=['GET'])
 def sources():
+    if os.getenv('INSTANCE') != 'dev':
+        return render_template('error.html')
+
     return render_template('sources.html')
 
 @app.route('/access', methods=['GET'])
 def access():
+    if os.getenv('INSTANCE') != 'dev':
+        return render_template('error.html')
+
     return render_template('access.html')
 
 @app.route('/licence', methods=['GET'])
 def licence():
+    if os.getenv('INSTANCE') != 'dev':
+        return render_template('error.html')
+
     return render_template('licence.html')
 
 @app.route('/<resource>', methods=['GET'])
 def page(resource):
+
+    if os.getenv('INSTANCE') == 'example':
+
+        # determine uuid validaty by attempting to determine the rdf.type.
+
+        uri = rdflib.URIRef(f'https://example.fiafcore.org/{resource}')
+        uri_match = [o for s,p,o in example_graph.triples((uri, rdflib.RDF.type, None))]
+        if not len(uri_match):
+           return render_template('error.html')
+
+        # pull type and generalise.
+
+        uri_type = uri_match[0]
+
+
+
+
+
+
+
+        return render_template('test.html', data=(resource, uri, len(uri_match), uri_type))
+
+
+
+
 
     print(resource)
 
