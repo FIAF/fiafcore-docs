@@ -8,6 +8,7 @@ services:
       - "5030:5030"
     environment:
       - PORT=5030
+      - INSTANCE=dev
   example:
     image: fiafcore-docs-example
     container_name: fiafcore-docs-example
@@ -16,3 +17,4 @@ services:
       - "5031:5031"
     environment:
       - PORT=5031
+      - INSTANCE=example

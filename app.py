@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import requests
 import rdflib
@@ -69,6 +70,9 @@ carrier_classes = subclasses('https://dev.fiafcore.org/Carrier')
 
 @app.route('/', methods=['GET'])
 def home():
+    if os.getenv('INSTANCE') != 'dev':
+        return render_template('error.html')
+
     return render_template('index.html')
 
 @app.route('/ontology', methods=['GET'])
