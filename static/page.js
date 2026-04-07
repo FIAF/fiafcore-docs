@@ -8,9 +8,6 @@ async function drawPage(data) {
   // console.log('@@@', resource)
 
 
-  // let subject_data = data.find(item => item['@id'] === resource);
-
-  // console.log('@@@', subject_data)
 
 
   d3.selectAll(".instep_1")
@@ -107,6 +104,27 @@ async function drawPage(data) {
     .attr("stroke-width", 1);
 
 
+  // jinja --->>> d3 code below.
+
+
+  let subject_data = data.find(item => item['@id'] === resource);
+
+  // console.log('@@@', subject_data)
+
+
+  const svg = d3.selectAll("#page")
+    .append("svg")
+    .attr("width", 800)
+    .attr("height", 400);
+
+
+
+svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 800)
+    .attr("height", 400)
+    .attr("fill", "white");
 
 
   // okay can we do a select all on all the line boxes, and draw lines!
@@ -116,18 +134,104 @@ async function drawPage(data) {
 
   // svg.append('text')
   //   .text(subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'])
-  //   .attr('x', 0).attr('y', 100)
+  //   .attr('x', 20).attr('y', 200)
   //   .attr('class', 'title')
 
+
+
+  // detect the length of this, and use that to plot next line
+  // 1. Select the D3 element and access the DOM node
+  // const elementNode = d3.select(".title").node().getBBox();
+
+
+  // // 3. Access the dimensions
+  // console.log(bbox.width);  // The rendered width
+  // console.log(bbox.height); // The rendered height
+  // console.log(bbox.x);      // The x-coordinate of the top-left corner
+  // console.log(bbox.y);      // The y-coordinate of the top-left corner
+
+  // svg.append("rect")
+  //   .attr("x", d3.select(".title").node().getBBox().x)
+  //   .attr("y", d3.select(".title").node().getBBox().y)
+  //   .attr("width", d3.select(".title").node().getBBox().width)
+  //   .attr("height", d3.select(".title").node().getBBox().height)
+  //   .attr("stroke", "grey")
+  //   .attr("stroke-width", 1)
+  //   .attr("fill", 'white');
+  // // // initial line under title.
+
+
+  // svg.append('text')
+  //   .text(subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'])
+  //   .attr('x', 20).attr('y', 200)
+  //   .attr('class', 'title')
+
+
+
+
+
+  svg.append("rect")
+    .attr("x",0)
+    .attr("y",20)
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("stroke", "blaack")
+    .attr("stroke-width", 1)
+    .attr("fill", 'black');
   // // initial line under title.
 
-  // // svg.append("line")
-  // //   .attr("x1", 0)
-  // //   .attr("y1", 100+10)
-  // //   .attr("x2", 40)
-  // //   .attr("y2", 100+10)
-  // //   .attr("stroke", "black")
-  // //   .attr("stroke-width", 1);
+  svg.append('text')
+    .text(subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'])
+    .attr('x', 25).attr('y', 40)
+    .attr('class', 'title')
+
+
+
+  svg.append("line")
+    .attr("x1", 10)
+    .attr("y1", 30)
+    .attr("x2", 60)
+
+    .attr("y2", 80)
+
+
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+
+
+  svg.append("line")
+    .attr("x1", 1)
+    .attr("y1", d3.select(".title").node().getBBox().y+(d3.select(".title").node().getBBox().height/2))
+    .attr("x2", 1)
+
+    .attr("y2", d3.select(".title").node().getBBox().y+(d3.select(".title").node().getBBox().height/2)+40)
+
+
+    .attr("stroke", "grey")
+    .attr("stroke-width", 1);
+
+
+
+  // svg.append("line")
+  //   .attr("x1", d3.select(".title").node().getBBox().x+((d3.select(".title").node().getBBox().width)/2))
+
+  //   .attr("y1", d3.select(".title").node().getBBox().y+d3.select(".title").node().getBBox().height)
+  //   .attr("x2", d3.select(".title").node().getBBox().x+((d3.select(".title").node().getBBox().width)/2))
+  //   .attr("y2", d3.select(".title").node().getBBox().y+d3.select(".title").node().getBBox().height+20)
+  //   .attr("stroke", "black")
+  //   .attr("stroke-width", 1);
+
+
+
+
+  // svg.append("line")
+  //   .attr("x1", d3.select(".title").node().getBBox().x+((d3.select(".title").node().getBBox().width)/2))
+
+  //   .attr("y1", d3.select(".title").node().getBBox().y+d3.select(".title").node().getBBox().height+20)
+  //   .attr("x2", d3.select(".title").node().getBBox().x)
+  //   .attr("y2", d3.select(".title").node().getBBox().y+d3.select(".title").node().getBBox().height+20)
+  //   .attr("stroke", "black")
+  //   .attr("stroke-width", 1);
 
   // // inital hookline.
 
