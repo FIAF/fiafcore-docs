@@ -20,7 +20,6 @@ app = Flask(__name__)
 
 # pull example rdf, from web resource. Do this on flask deploy.
 
-
 example_graph = rdflib.Graph()
 example_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
 example_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
@@ -28,6 +27,14 @@ example_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Su
 example_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
 example_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
 example_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
+
+# mint deterministic bnode uris.
+
+bnodes = dict()
+for i in range(1,3):
+    bnodes[f'blankNode{i}'] = rdflib.BNode()
+
+# build example graph from turtle fragments.
 
 for example_type in [
     'Work',
@@ -44,9 +51,29 @@ for example_type in [
     if r.status_code != 200:
         raise Exception(f'API {r.status_code}: {r.text}')
 
-    example_graph += rdflib.Graph().parse(data=r.text)
+    # convert bnodes to literals.
+
+    rdf = r.text
+    for b in bnodes.keys():
+        rdf = rdf.replace(f'_:{b}', f'"{b}"')
+
+    example_graph += rdflib.Graph().parse(data=rdf)
+
+# extra entity labelling.
 
 example_graph.add((rdflib.URIRef('https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0'), rdflib.RDFS.label, rdflib.Literal('Test Archive')))
+
+# replace bnode literals with deterministic bnodes.
+
+for k,v in bnodes.items():
+    for s,p,o in example_graph.triples((None, None, None)):
+        if s == rdflib.Literal(k):
+            example_graph.add((v, p, o))
+            example_graph.remove((s,p,o))
+        if o == rdflib.Literal(k):
+            example_graph.add((s, p, v))
+            example_graph.remove((s,p,o))
+
 
 # NOTE: all of these additional example labels should be present at source.
 
@@ -211,13 +238,18 @@ def page(resource):
         # determine uuid validaty by attempting to determine the rdf.type.
 
         uri = rdflib.URIRef(f'https://example.fiafcore.org/{resource}')
+        print(uri)
         uri_match = [o for s,p,o in example_graph.triples((uri, rdflib.RDF.type, None))]
+        print(uri_match)
         if not len(uri_match):
            return render_template('error.html')
 
         # pull type and generalise.
 
         uri_type = uri_match[0]
+        print(uri_type)
+        print(superclass_lookup.keys())
+
         if uri_type not in superclass_lookup.keys():
             return render_template('error.html')
 
@@ -242,10 +274,10 @@ def page(resource):
 
         # TODO: you should be able to route this to the proper template now.
 
-        return render_template('test.html', data=result.serialize(format='ttl').decode())
+        # return render_template('test.html', data=result.serialize(format='ttl').decode())
         #
 
-        return render_template('entity2.html', resource=str(uri), data=data)
+        return render_template('entity.html', resource=str(uri), data=data)
 
 
 
