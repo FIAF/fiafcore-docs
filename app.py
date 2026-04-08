@@ -22,6 +22,13 @@ app = Flask(__name__)
 
 
 example_graph = rdflib.Graph()
+example_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
+example_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
+example_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+example_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
+example_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
+example_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
+
 for example_type in [
     'Work',
     'Variant',
@@ -31,23 +38,16 @@ for example_type in [
     'Event',
     'Activity',
     'Agent']:
+
     example_path = f'https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/example/{example_type}.ttl'
-
-
     r = requests.get(example_path)
     if r.status_code != 200:
         raise Exception(f'API {r.status_code}: {r.text}')
 
     example_graph += rdflib.Graph().parse(data=r.text)
 
-    print('@@@', len(example_graph))
-
-
-#
-
-
-
-
+# INFO: You need to add the ontology to example_graph to be able to leverage labels to render pages,
+# but you need to filter out the ontology properties themselves.
 
 r = requests.get('https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/fiafcore.ttl')
 if r.status_code != 200:
@@ -217,18 +217,33 @@ def page(resource):
         # pull type and generalise.
 
         uri_type = uri_match[0]
-
         if uri_type not in superclass_lookup.keys():
             return render_template('error.html')
 
         uri_superclass = superclass_lookup[uri_type]
 
+        # route to appropriate shape and insert subject uri.
 
+        shape = pathlib.Path(uri_superclass).stem.lower()
+        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+        if not shape_path.exists():
+            raise Exception('Shape file not found.')
 
+        with open(shape_path) as construct:
+            construct = construct.read()
+            construct = construct.replace('SUBJECT_URI', f'<{uri}>')
 
+        # apply shape query to example graph and return json-ld.
 
-        return render_template('test.html', data=(resource, uri, len(uri_match), uri_type, uri_superclass))
+        result = (example_graph+ontology_graph).query(construct)
+        data = result.serialize(format="json-ld").decode()
+        data = json.loads(data)
 
+        # TODO: you should be able to route this to the proper template now.
+
+        return render_template('test.html', data=data)
+
+        # return render_template('entity.html', resource=uri, data=data)
 
 
 
