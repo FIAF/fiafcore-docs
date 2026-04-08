@@ -46,8 +46,9 @@ for example_type in [
 
     example_graph += rdflib.Graph().parse(data=r.text)
 
-# INFO: You need to add the ontology to example_graph to be able to leverage labels to render pages,
-# but you need to filter out the ontology properties themselves.
+example_graph.add((rdflib.URIRef('https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0'), rdflib.RDFS.label, rdflib.Literal('Test Archive')))
+
+# NOTE: all of these additional example labels should be present at source.
 
 r = requests.get('https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/fiafcore.ttl')
 if r.status_code != 200:
@@ -241,9 +242,10 @@ def page(resource):
 
         # TODO: you should be able to route this to the proper template now.
 
-        return render_template('test.html', data=data)
+        return render_template('test.html', data=result.serialize(format='ttl').decode())
+        #
 
-        # return render_template('entity.html', resource=uri, data=data)
+        return render_template('entity2.html', resource=str(uri), data=data)
 
 
 

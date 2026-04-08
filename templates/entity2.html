@@ -1,0 +1,162 @@
+
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{{ data }} <br><br><br>
+
+{% set subject_data = data | selectattr("@id", "equalto", resource) | first %}
+
+{{ subject_data }}
+
+<div id="page"></div>
+<br><br>
+<tspan class="title">{{ subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</tspan>
+<br>
+<br><div class="instep_1" style="display: inline-block;" ></div> <b>uri</b>
+  {{ subject_data['@id'] }}
+<br><div class="instep_1" style="display: inline-block;" ></div>  <b>type</b>
+    {{ subject_data['@type'] }}
+
+
+    {% set exclude_list = ["@id", "@type", 'http://www.w3.org/2000/01/rdf-schema#label'] %}
+    {% for item in subject_data %}
+        {% if item not in exclude_list %}
+            {% set item_data = data | selectattr("@id", "equalto", item) | first %}
+
+            {% for val in subject_data[item] %}
+                {% if '_:' in val['@id'] %}
+
+                <!--// THIS IS A BLANK NODE //-->
+
+                    {% set test = data | selectattr("@id", "equalto", val['@id']) | first %}
+                    {% set bnode_data = data | selectattr("@id", "equalto", test['@type'][0]) | first %}
+                    <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+                    <a href="{{ bnode_data['@id'] }}">{{ bnode_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+                    {% for prop in test %}
+                        {% if prop not in exclude_list %}
+                            {% set prop_data = data | selectattr("@id", "equalto", prop) | first %}
+
+                <!--<br><div class="instep_3" style="display: inline-block;" >  </div>-->
+                  <!--<b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>-->
+
+                  {% for val2 in test[prop] %}
+                                {% if '_:' in val2['@id'] %}
+
+                                    <!--// ANOTHER BLANK NODE //-->
+
+                                    {% set test2 = data | selectattr("@id", "equalto", val2['@id']) | first  %}
+                                    {% set bnode_data2 = data | selectattr("@id", "equalto", test2['@type'][0]) | first %}
+
+
+    <br><div class="instep_3" style="display: inline-block;" ></div>
+    <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+    <a href="{{ bnode_data2['@id'] }}">{{ bnode_data2['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+
+
+                                    {% for prop2 in test2 %}
+                                        {% if prop2 not in exclude_list %}
+
+                                            {% set prop2_data = data | selectattr("@id", "equalto", prop2) | first %}
+
+                                            {% for val3 in test2[prop2] %}
+
+                                                {% if '_:' in val3['@id'] %}
+
+                                                    <!--// YET ANOTHER BLANK NODE //-->
+
+                                                {% elif 'fiafcore.org' in val3['@id'] %}
+
+                                                    <!--// YET ANOTHER ENTITY //-->
+
+                                                    {% set test4 = data | selectattr("@id", "equalto", val3['@id']) | first   %}
+
+
+
+    <br><div class="instep_5" style="display: inline-block;" ></div>  <b><a href="{{ prop2 }}">{{ prop2_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+    <a href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+                                                {% else %}
+
+                                                    <!--// YET ANOTHER THING //-->
+
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                {% elif 'fiafcore.org' in val2['@id'] %}
+
+                                    <!--// ANOTHER ENTITY //-->
+
+
+
+
+                                    {% set test5 = data | selectattr("@id", "equalto", val2['@id']) | first   %}
+
+
+                                    <br><div class="instep_3" style="display: inline-block;" >  </div>
+                                      <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+
+
+                                    <a href="{{ val2['@id'] }}">{{ test5['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+
+                                {% else %}
+
+                                    <!--// ANOTHER THING //-->
+                                    <br><div class="instep_3" style="display: inline-block;" >  </div>
+                                      <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+                                                 {{ val2['@value'] }}
+
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+
+                {% elif 'fiafcore.org' in val['@id'] or 'purl.org' in val['@id'] %}
+
+
+
+                    <!--THIS IS A ENTITY //-->
+
+                    {% set test = data | selectattr("@id", "equalto", val['@id']) | first | default("No Record", true)  %}
+                    <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+                                 <a href="{{ val['@id'] }}">{{ test['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+
+
+                {% else %}
+
+                    <!--THIS IS ANOTHER THING //-->
+
+                    <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+
+        {{ val['@value'] }}
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>let data = JSON.parse('{{ data|tojson|safe }}')</script>
+
+
+<script>
+    let resource = {{ resource|tojson|safe }};
+</script>
+
+<script src="../static/page.js"></script>
+
+{% endblock %}
