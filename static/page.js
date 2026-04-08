@@ -114,16 +114,16 @@ async function drawPage(data) {
 
   const svg = d3.selectAll("#page")
     .append("svg")
-    .attr("width", 800)
-    .attr("height", 400);
+    .attr("width", 0)
+    .attr("height", 0);
 
 
 
 svg.append("rect")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", 800)
-    .attr("height", 400)
+    .attr("width", 0)
+    .attr("height", 0)
     .attr("fill", "white");
 
 

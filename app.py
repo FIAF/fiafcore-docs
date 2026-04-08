@@ -17,7 +17,6 @@ def pull_attribute(e, p, gr):
 
 app = Flask(__name__)
 
-
 # pull example rdf, from web resource. Do this on flask deploy.
 
 example_graph = rdflib.Graph()
@@ -31,7 +30,7 @@ example_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")
 # mint deterministic bnode uris.
 
 bnodes = dict()
-for i in range(1,3):
+for i in range(1,30):
     bnodes[f'blankNode{i}'] = rdflib.BNode()
 
 # build example graph from turtle fragments.
@@ -60,8 +59,10 @@ for example_type in [
     example_graph += rdflib.Graph().parse(data=rdf)
 
 # extra entity labelling.
+# NOTE: these additional example statements should be present at source.
 
 example_graph.add((rdflib.URIRef('https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0'), rdflib.RDFS.label, rdflib.Literal('Test Archive')))
+example_graph.add((rdflib.URIRef('https://example.fiafcore.org/f0032f62-d28c-4730-a358-afb8106173e0'), rdflib.RDF.type, rdflib.URIRef('https://dev.fiafcore.org/Organisation')))
 
 # replace bnode literals with deterministic bnodes.
 
@@ -73,9 +74,6 @@ for k,v in bnodes.items():
         if o == rdflib.Literal(k):
             example_graph.add((s, p, v))
             example_graph.remove((s,p,o))
-
-
-# NOTE: all of these additional example labels should be present at source.
 
 r = requests.get('https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/fiafcore.ttl')
 if r.status_code != 200:
@@ -120,7 +118,12 @@ def superclass(graph):
         }
     """
 
-    return dict([(row.child, row.parent) for row in graph.query(query)])
+    result = dict([(row.child, row.parent) for row in graph.query(query)])
+    for entity_type in ['Work', 'Variant', 'Manifestation', 'Item', 'Carrier', 'Agent']:
+        entity_uri = rdflib.URIRef(f'https://dev.fiafcore.org/{entity_type}')
+        result[entity_uri] = entity_uri
+
+    return result
 
 superclass_lookup = superclass(ontology_graph)
 print('**', superclass_lookup)
@@ -238,18 +241,13 @@ def page(resource):
         # determine uuid validaty by attempting to determine the rdf.type.
 
         uri = rdflib.URIRef(f'https://example.fiafcore.org/{resource}')
-        print(uri)
         uri_match = [o for s,p,o in example_graph.triples((uri, rdflib.RDF.type, None))]
-        print(uri_match)
         if not len(uri_match):
-           return render_template('error.html')
+            return render_template('error.html')
 
         # pull type and generalise.
 
         uri_type = uri_match[0]
-        print(uri_type)
-        print(superclass_lookup.keys())
-
         if uri_type not in superclass_lookup.keys():
             return render_template('error.html')
 
@@ -279,102 +277,143 @@ def page(resource):
 
         return render_template('entity.html', resource=str(uri), data=data)
 
+    elif os.getenv('INSTANCE') == 'dev':
 
+        # determine uuid validaty by attempting to determine the rdf.type.
 
+        uri = rdflib.URIRef(f'https://dev.fiafcore.org/{resource}')
+        uri_match = [o for s,p,o in ontology_graph.triples((uri, rdflib.RDF.type, None))]
+        if len(uri_match):
 
-    print(resource)
+            uri_type = uri_match[0]
+            if rdflib.URIRef(uri_type) == rdflib.OWL.Class:
+                shape = 'class'
+            elif rdflib.URIRef(uri_type) == rdflib.OWL.DatatypeProperty:
+                shape = 'property'
+            elif rdflib.URIRef(uri_type) == rdflib.OWL.ObjectProperty:
+                shape = 'property'
+            else:
+                raise Exception('Shape not determined.')
 
-    # these should move to top level so they are not processing for each page.
-    # although - longterm they will be sparql queries not local graph queries.
+            shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+            if not shape_path.exists():
+                raise Exception('Shape file not found.')
 
-    resource_graph = rdflib.Graph().parse(pathlib.Path.cwd() / 'graph.ttl')
-    resources = [pathlib.Path(s).name for s,p,o in resource_graph.triples((None, None, None))]
-    ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
-    if resource in ontology:
+            with open(shape_path) as construct:
+                construct = construct.read()
+                construct = construct.replace('SUBJECT_URI', f'<{uri}>')
 
-        namespace = 'https://dev.fiafcore.org/'
-        subject_uri = f'{namespace}{resource}'
+            # apply shape query to example graph and return json-ld.
 
-        subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
-        if not len(subject_types):
-            raise Exception('Type could not be detected.')
-        subject_type = subject_types[0]
+            result = (example_graph+ontology_graph).query(construct)
+            data = result.serialize(format="json-ld").decode()
+            data = json.loads(data)
 
-        if rdflib.URIRef(subject_type) == rdflib.OWL.Class:
-            shape = 'class'
-        elif rdflib.URIRef(subject_type) == rdflib.OWL.DatatypeProperty:
-            shape = 'property'
-        elif rdflib.URIRef(subject_type) == rdflib.OWL.ObjectProperty:
-            shape = 'property'
-        else:
-            raise Exception('Shape not determined.')
+            return render_template('entity.html', resource=str(uri), data=data)
 
-        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
-        if not shape_path.exists():
-            raise Exception('Shape file not found.')
+        # TODO, this is where we send the type query across to the triplestore.
 
-        with open(shape_path) as construct:
-            construct = construct.read()
-            construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+        return render_template('test.html', data=(uri, uri_match))
 
-        resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
-        resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
-        resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
-        resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
-        resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
-        resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
-
-        result = resource_graph.query(construct)
-        data = result.serialize(format="json-ld").decode()
-        data = json.loads(data)
-
-        return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
-
-    elif resource in resources:
-
-        namespace = 'https://dev.fiafcore.org/'
-        subject_uri = f'{namespace}{resource}'
-
-        subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
-        if not len(subject_types):
-            raise Exception('Type could not be detected.')
-        subject_type = subject_types[0]
-
-        if subject_type in work_classes:
-            shape = 'work'
-        elif subject_type in manifestation_classes:
-            shape = 'manifestation'
-        elif subject_type in item_classes:
-            shape = 'item'
-        elif subject_type in carrier_classes:
-            shape = 'carrier'
-        elif subject_type in agent_classes:
-            shape = 'agent'
-        else:
-            raise Exception('Shape not determined.')
-
-        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
-        if not shape_path.exists():
-            raise Exception('Shape file not found.')
-
-        with open(shape_path) as construct:
-            construct = construct.read()
-            construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
-
-        resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
-        resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
-        resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
-        resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
-        resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
-        resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
-
-        result = resource_graph.query(construct)
-        data = result.serialize(format="json-ld").decode()
-        data = json.loads(data)
-
-        return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
     else:
         return render_template('error.html')
+
+
+
+
+    # print(resource)
+
+    # # these should move to top level so they are not processing for each page.
+    # # although - longterm they will be sparql queries not local graph queries.
+
+    # resource_graph = rdflib.Graph().parse(pathlib.Path.cwd() / 'graph.ttl')
+    # resources = [pathlib.Path(s).name for s,p,o in resource_graph.triples((None, None, None))]
+    # ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
+    # if resource in ontology:
+
+    #     namespace = 'https://dev.fiafcore.org/'
+    #     subject_uri = f'{namespace}{resource}'
+
+    #     subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
+    #     if not len(subject_types):
+    #         raise Exception('Type could not be detected.')
+    #     subject_type = subject_types[0]
+
+    #     if rdflib.URIRef(subject_type) == rdflib.OWL.Class:
+    #         shape = 'class'
+    #     elif rdflib.URIRef(subject_type) == rdflib.OWL.DatatypeProperty:
+    #         shape = 'property'
+    #     elif rdflib.URIRef(subject_type) == rdflib.OWL.ObjectProperty:
+    #         shape = 'property'
+    #     else:
+    #         raise Exception('Shape not determined.')
+
+    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+    #     if not shape_path.exists():
+    #         raise Exception('Shape file not found.')
+
+    #     with open(shape_path) as construct:
+    #         construct = construct.read()
+    #         construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+
+    #     resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
+    #     resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
+    #     resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+    #     resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
+    #     resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
+    #     resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
+
+    #     result = resource_graph.query(construct)
+    #     data = result.serialize(format="json-ld").decode()
+    #     data = json.loads(data)
+
+    #     return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
+
+    # elif resource in resources:
+
+    #     namespace = 'https://dev.fiafcore.org/'
+    #     subject_uri = f'{namespace}{resource}'
+
+    #     subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
+    #     if not len(subject_types):
+    #         raise Exception('Type could not be detected.')
+    #     subject_type = subject_types[0]
+
+    #     if subject_type in work_classes:
+    #         shape = 'work'
+    #     elif subject_type in manifestation_classes:
+    #         shape = 'manifestation'
+    #     elif subject_type in item_classes:
+    #         shape = 'item'
+    #     elif subject_type in carrier_classes:
+    #         shape = 'carrier'
+    #     elif subject_type in agent_classes:
+    #         shape = 'agent'
+    #     else:
+    #         raise Exception('Shape not determined.')
+
+    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+    #     if not shape_path.exists():
+    #         raise Exception('Shape file not found.')
+
+    #     with open(shape_path) as construct:
+    #         construct = construct.read()
+    #         construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
+
+    #     resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
+    #     resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
+    #     resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+    #     resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
+    #     resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
+    #     resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
+
+    #     result = resource_graph.query(construct)
+    #     data = result.serialize(format="json-ld").decode()
+    #     data = json.loads(data)
+
+    #     return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
+    # else:
+    #     return render_template('error.html')
 
 
 if __name__ == "__main__":
