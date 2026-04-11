@@ -5,9 +5,10 @@
 
 {% set subject_data = data | selectattr("@id", "equalto", resource) | first %}
 
-<!--{{ subject_data }}-->
+{{ subject_data }}
 
 <div id="page"></div>
+<tspan class='default_grey'>
 
 <br><br>
 <tspan class="title">{{ subject_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</tspan>
@@ -15,7 +16,9 @@
 <br><div class="instep_1" style="display: inline-block;" ></div> <b>uri</b>
   {{ subject_data['@id'] }}
 <br><div class="instep_1" style="display: inline-block;" ></div>  <b>type</b>
-    {{ subject_data['@type'] }}
+
+{% set entity_type = data | selectattr("@id", "equalto", subject_data['@type'][0]) | first %}
+<a style="color: lightcoral;" href="{{ entity_type['@id'] }}">{{ entity_type['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 {% set exclude_list = ["@id", "@type", 'http://www.w3.org/2000/01/rdf-schema#label'] %}
 {% for item in subject_data %}
@@ -29,9 +32,9 @@
 
                 {% set test = data | selectattr("@id", "equalto", val['@id']) | first %}
                 {% set bnode_data = data | selectattr("@id", "equalto", test['@type'][0]) | first %}
-                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a style="color: lightcoral;" href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
-                <a href="{{ bnode_data['@id'] }}">{{ bnode_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+                <a style="color: lightcoral;" href="{{ bnode_data['@id'] }}">{{ bnode_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
                 {% for prop in test %}
@@ -39,7 +42,7 @@
                         {% set prop_data = data | selectattr("@id", "equalto", prop) | first %}
 
             <!--<br><div class="instep_3" style="display: inline-block;" >  </div>-->
-              <!--<b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>-->
+              <!--<b><a style="color: lightcoral;" href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>-->
 
               {% for val2 in test[prop] %}
                             {% if '_:' in val2['@id'] %}
@@ -51,8 +54,8 @@
 
 
 <br><div class="instep_3" style="display: inline-block;" ></div>
-<b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
-<a href="{{ bnode_data2['@id'] }}">{{ bnode_data2['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+<b><a style="color: lightcoral;" href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+<a style="color: lightcoral;" href="{{ bnode_data2['@id'] }}">{{ bnode_data2['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
 
@@ -77,8 +80,8 @@
 
 
 
-<br><div class="instep_5" style="display: inline-block;" ></div>  <b><a href="{{ prop2 }}">{{ prop2_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
-<a href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+<br><div class="instep_5" style="display: inline-block;" ></div>  <b><a style="color: lightcoral;" href="{{ prop2 }}">{{ prop2_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+<a style="color: lightcoral;" href="{{ val3['@id'] }}">{{ test4['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
                                             {% else %}
@@ -101,11 +104,11 @@
 
 
                                 <br><div class="instep_3" style="display: inline-block;" >  </div>
-                                  <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+                                  <b><a style="color: lightcoral;" href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
 
 
-                                <a href="{{ val2['@id'] }}">{{ test5['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+                                <a style="color: lightcoral;" href="{{ val2['@id'] }}">{{ test5['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
 
@@ -113,7 +116,7 @@
 
                                 <!--// ANOTHER THING //-->
                                 <br><div class="instep_3" style="display: inline-block;" >  </div>
-                                  <b><a href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+                                  <b><a style="color: lightcoral;" href="{{ prop }}">{{ prop_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
                                              {{ val2['@value'] }}
 
@@ -129,16 +132,16 @@
                 <!--THIS IS A ENTITY //-->
 
                 {% set test = data | selectattr("@id", "equalto", val['@id']) | first | default("No Record", true)  %}
-                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a style="color: lightcoral;" href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
-                             <a href="{{ val['@id'] }}">{{ test['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
+                             <a style="color: lightcoral;" href="{{ val['@id'] }}">{{ test['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a>
 
 
             {% else %}
 
                 <!--THIS IS ANOTHER THING //-->
 
-                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
+                <br> <div class="instep_1" style="display: inline-block;" ></div> <b><a style="color: lightcoral;" href="{{ item }}">{{ item_data['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value'] }}</a></b>
 
     {{ val['@value'] }}
 
@@ -148,7 +151,7 @@
 {% endfor %}
 
 
-
+</tspan>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>let data = JSON.parse('{{ data|tojson|safe }}')</script>

@@ -9,6 +9,7 @@ construct {
   rdfs:label rdfs:label ?labelLabel .
 
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
 
   SUBJECT_URI dc:description ?description .
   dc:description rdfs:label ?descriptionPropLabel .
@@ -25,6 +26,7 @@ where {
   SUBJECT_URI rdfs:label ?label .
   rdfs:label rdfs:label ?labelLabel .
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
   optional {
     SUBJECT_URI dc:description ?description .
     dc:description rdfs:label ?descriptionPropLabel .

@@ -8,6 +8,7 @@ construct {
   rdfs:label rdfs:label ?labelLabel .
 
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
 
   SUBJECT_URI fiaf:hasColourCharacteristic ?colourCharacteristic .
   fiaf:hasColourCharacteristic rdfs:label ?colourCharacteristicPropLabel .
@@ -67,6 +68,7 @@ where {
   SUBJECT_URI rdfs:label ?label .
   rdfs:label rdfs:label ?labelLabel .
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
   optional {
     SUBJECT_URI fiaf:hasColourCharacteristic ?colourCharacteristic .
     fiaf:hasColourCharacteristic rdfs:label ?colourCharacteristicPropLabel .

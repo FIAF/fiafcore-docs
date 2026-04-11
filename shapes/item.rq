@@ -8,6 +8,7 @@ construct {
   rdfs:label rdfs:label ?labelLabel .
 
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
 
   SUBJECT_URI fiaf:hasBase ?base .
   ?base rdfs:label ?baseLabel .
@@ -83,6 +84,7 @@ where {
   SUBJECT_URI rdfs:label ?label .
   rdfs:label rdfs:label ?labelLabel .
   SUBJECT_URI rdf:type ?type .
+  ?type rdfs:label ?typeLabel .
   optional {
     SUBJECT_URI fiaf:hasBase ?base .
     ?base rdfs:label ?baseLabel .

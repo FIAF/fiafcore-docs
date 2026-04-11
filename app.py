@@ -82,6 +82,14 @@ if r.status_code != 200:
 g = rdflib.Graph().parse(data=r.text) # turn this off in lieu of ontology_graph, once you have re routed.
 
 ontology_graph = rdflib.Graph().parse(data=r.text)
+ontology_graph.add((rdflib.OWL.Class, rdflib.RDFS.label, rdflib.Literal("Class")))
+ontology_graph.add((rdflib.OWL.DatatypeProperty, rdflib.RDFS.label, rdflib.Literal("Datatype Property")))
+ontology_graph.add((rdflib.OWL.ObjectProperty, rdflib.RDFS.label, rdflib.Literal("Object Property")))
+ontology_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
+ontology_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.domain, rdflib.Literal("Domain")))
+ontology_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.range, rdflib.Literal("Range")))
+ontology_graph.add((rdflib.URIRef('http://purl.org/dc/elements/1.1/description'), rdflib.RDFS.label, rdflib.Literal("Description")))
+ontology_graph.add((rdflib.URIRef('http://purl.org/dc/elements/1.1/source'), rdflib.RDFS.label, rdflib.Literal("Source")))
 
 # parsing entity to remove all unionOf nodes.
 
