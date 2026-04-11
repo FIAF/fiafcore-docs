@@ -1,5 +1,6 @@
 import json
 import os
+import pandas
 import pathlib
 import requests
 import rdflib
@@ -278,11 +279,6 @@ def page(resource):
         data = result.serialize(format="json-ld").decode()
         data = json.loads(data)
 
-        # TODO: you should be able to route this to the proper template now.
-
-        # return render_template('test.html', data=result.serialize(format='ttl').decode())
-        #
-
         return render_template('entity.html', resource=str(uri), data=data)
 
     elif os.getenv('INSTANCE') == 'dev':
@@ -321,7 +317,105 @@ def page(resource):
 
         # TODO, this is where we send the type query across to the triplestore.
 
-        return render_template('test.html', data=(uri, uri_match))
+        query = """
+        prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            select ?entity_type
+            where {
+                values ?entity { <"""+str(uri)+"""> }
+                ?entity rdf:type ?entity_type
+
+                }
+        """
+        headers = {
+            # "Accept": "text/tab-separated-values"
+              'Accept': 'application/json'
+        }
+
+        # PREFIX wd:
+        # PREFIX wdt: <http://wikidata.org>
+
+        # SELECT ?person ?cityLabel WHERE {
+        #   # Define specific cities to look for
+        #   VALUES ?city { wd:Q84 wd:Q90 } # London and Paris
+
+        #   ?person wdt:P19 ?city . # person was born in that city
+        #   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        # }
+
+
+        r = requests.post('https://data.fiafcore.org', headers=headers, data={'query': query})
+        if r.status_code != 200:
+            # return render_template('error.html') # a more useful error would be good.
+            raise Exception(f'API {r.status_code}: {r.text}')
+
+
+        entity_types = r.json()['results']['bindings']
+        if not len(entity_types):
+            raise Exception('More than one type should exist against entity.')
+
+        # pull type and generalise.
+
+        uri_type = rdflib.URIRef(entity_types[0]['entity_type']['value'])
+        if uri_type not in superclass_lookup.keys():
+            return render_template('error.html')
+
+        uri_superclass = superclass_lookup[uri_type]
+
+        # route to appropriate shape and insert subject uri.
+
+        shape = pathlib.Path(uri_superclass).stem.lower()
+        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
+        if not shape_path.exists():
+            raise Exception('Shape file not found.')
+
+        with open(shape_path) as construct:
+            construct = construct.read()
+            construct = construct.replace('SUBJECT_URI', f'<{uri}>')
+
+        # apply shape query to triplestore and return json-ld.
+        # headers = {
+        #     # "Accept": "text/tab-separated-values"
+        #       'Accept': 'application/json'
+        # }
+
+        # headers = {
+        #     "Accept": "text/turtle",
+        #     "Content-Type": "application/x-www-form-urlencoded"
+        # }
+
+        # headers=headers,
+        r = requests.post('https://data.fiafcore.org', data={'query': construct})
+        if r.status_code != 200:
+           # return render_template('error.html') # a more useful error would be good.
+           raise Exception(f'API {r.status_code}: {r.text}')
+
+
+
+        # result = (example_graph+ontology_graph).query(construct)
+        # data = result.serialize(format="json-ld").decode()
+        # data = json.loads(data)
+
+        # return render_template('entity.html', resource=str(uri), data=data)
+
+
+
+# s        uri_match = [o for s,p,o in example_graph.triples((uri, rdflib.RDF.type, None))]
+
+
+    #     # Passing a dictionary to 'data' performs the urlencoding
+    #     payload = {
+    #         "query": query_str
+    #     }
+
+    #     try:
+    #         response = requests.post(url, headers=headers, data=payload)
+    #         response.raise_for_status()  # Raises an error for bad status codes
+    #         print(response.text)
+    #     except requests.exceptions.RequestException as e:
+    #         print(f"An error occurred: {e}")
+
+        return render_template('test.html', data=(construct, uri_superclass, r.status_code, r.text))
 
     else:
         return render_template('error.html')
