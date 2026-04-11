@@ -256,7 +256,7 @@ def page(resource):
         # route to appropriate shape and insert subject uri.
 
         shape = pathlib.Path(uri_superclass).stem.lower()
-        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+        shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
         if not shape_path.exists():
             raise Exception('Shape file not found.')
 
@@ -295,7 +295,7 @@ def page(resource):
             else:
                 raise Exception('Shape not determined.')
 
-            shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+            shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
             if not shape_path.exists():
                 raise Exception('Shape file not found.')
 
@@ -348,7 +348,7 @@ def page(resource):
     #     else:
     #         raise Exception('Shape not determined.')
 
-    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
     #     if not shape_path.exists():
     #         raise Exception('Shape file not found.')
 
@@ -392,7 +392,7 @@ def page(resource):
     #     else:
     #         raise Exception('Shape not determined.')
 
-    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.sparql'
+    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
     #     if not shape_path.exists():
     #         raise Exception('Shape file not found.')
 
