@@ -1,6 +1,5 @@
 import json
 import os
-import pandas
 import pathlib
 import requests
 import rdflib
@@ -11,7 +10,7 @@ def pull_attribute(e, p, gr):
 
     x = [c for a,b,c in gr.triples((e, p, None))]
     if len(x) != 1:
-        print(c)
+        # print(c)
         raise Exception(f'Single value expected {x}.')
 
     return x[0]
@@ -135,7 +134,7 @@ def superclass(graph):
     return result
 
 superclass_lookup = superclass(ontology_graph)
-print('**', superclass_lookup)
+# print('**', superclass_lookup)
 
 def subclasses(parent):
 
@@ -206,7 +205,25 @@ def ontology():
             string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
         string += '</table>'
 
-        string += '<br><i>Example</i><br><br>'
+        # add example link, where relevant.
+
+        if entity == rdflib.URIRef('https://dev.fiafcore.org/Work'):
+            example_link = 'https://example.fiafcore.org/77566b79-9889-4772-adff-8640a0f6287e'
+        elif entity == rdflib.URIRef('https://dev.fiafcore.org/Manifestation'):
+            example_link = 'https://example.fiafcore.org/ede01e7e-3513-4d9c-bfac-a37e01785b22'
+        elif entity == rdflib.URIRef('https://dev.fiafcore.org/Item'):
+            example_link = 'https://example.fiafcore.org/732fce4e-9738-4501-bc5f-f9243db387af'
+        elif entity == rdflib.URIRef('https://dev.fiafcore.org/Carrier'):
+            example_link = 'https://example.fiafcore.org/005ecbf8-1693-4986-8fef-43f55436dfe8'
+        elif entity == rdflib.URIRef('https://dev.fiafcore.org/Agent'):
+            example_link = 'https://example.fiafcore.org/37101230-528d-4f14-b50b-e0127756b7fa'
+        else:
+            example_link = ''
+
+        if len(example_link):
+            string += f'<br><i>Example</i> [<a href="{example_link}" style="color: crimson">link</a>]<br><br>'
+        else:
+            string += '<br><i>Example</i><br><br>'
 
         example_type = pathlib.Path(entity).name
         example_path = f'https://raw.githubusercontent.com/FIAF/fiafcore/refs/heads/develop/example/{example_type}.ttl'
@@ -315,40 +332,20 @@ def page(resource):
 
             return render_template('entity.html', resource=str(uri), data=data)
 
-        # TODO, this is where we send the type query across to the triplestore.
+        # process to request data from triplestore.
 
         query = """
-        prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             select ?entity_type
             where {
                 values ?entity { <"""+str(uri)+"""> }
                 ?entity rdf:type ?entity_type
+                } """
 
-                }
-        """
-        headers = {
-            # "Accept": "text/tab-separated-values"
-              'Accept': 'application/json'
-        }
-
-        # PREFIX wd:
-        # PREFIX wdt: <http://wikidata.org>
-
-        # SELECT ?person ?cityLabel WHERE {
-        #   # Define specific cities to look for
-        #   VALUES ?city { wd:Q84 wd:Q90 } # London and Paris
-
-        #   ?person wdt:P19 ?city . # person was born in that city
-        #   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-        # }
-
-
-        r = requests.post('https://data.fiafcore.org', headers=headers, data={'query': query})
+        r = requests.post('https://data.fiafcore.org', data={'query': query})
         if r.status_code != 200:
-            # return render_template('error.html') # a more useful error would be good.
             raise Exception(f'API {r.status_code}: {r.text}')
-
 
         entity_types = r.json()['results']['bindings']
         if not len(entity_types):
@@ -373,149 +370,22 @@ def page(resource):
             construct = construct.read()
             construct = construct.replace('SUBJECT_URI', f'<{uri}>')
 
-        # apply shape query to triplestore and return json-ld.
-        # headers = {
-        #     # "Accept": "text/tab-separated-values"
-        #       'Accept': 'application/json'
-        # }
+        # issue type specific sparql query to triplestore.
 
-        # headers = {
-        #     "Accept": "text/turtle",
-        #     "Content-Type": "application/x-www-form-urlencoded"
-        # }
-
-        # headers=headers,
         r = requests.post('https://data.fiafcore.org', data={'query': construct})
         if r.status_code != 200:
-           # return render_template('error.html') # a more useful error would be good.
            raise Exception(f'API {r.status_code}: {r.text}')
 
+        # format switch to prepare for flask.
 
+        data = rdflib.Graph().parse(data=r.text)
+        data = data.serialize(format="json-ld")
+        data = json.loads(data)
 
-        # result = (example_graph+ontology_graph).query(construct)
-        # data = result.serialize(format="json-ld").decode()
-        # data = json.loads(data)
-
-        # return render_template('entity.html', resource=str(uri), data=data)
-
-
-
-# s        uri_match = [o for s,p,o in example_graph.triples((uri, rdflib.RDF.type, None))]
-
-
-    #     # Passing a dictionary to 'data' performs the urlencoding
-    #     payload = {
-    #         "query": query_str
-    #     }
-
-    #     try:
-    #         response = requests.post(url, headers=headers, data=payload)
-    #         response.raise_for_status()  # Raises an error for bad status codes
-    #         print(response.text)
-    #     except requests.exceptions.RequestException as e:
-    #         print(f"An error occurred: {e}")
-
-        return render_template('test.html', data=(construct, uri_superclass, r.status_code, r.text))
+        return render_template('entity.html', resource=str(uri), data=data)
 
     else:
         return render_template('error.html')
-
-
-
-
-    # print(resource)
-
-    # # these should move to top level so they are not processing for each page.
-    # # although - longterm they will be sparql queries not local graph queries.
-
-    # resource_graph = rdflib.Graph().parse(pathlib.Path.cwd() / 'graph.ttl')
-    # resources = [pathlib.Path(s).name for s,p,o in resource_graph.triples((None, None, None))]
-    # ontology = [pathlib.Path(s).name for s,p,o in g.triples((None, None, None))]
-    # if resource in ontology:
-
-    #     namespace = 'https://dev.fiafcore.org/'
-    #     subject_uri = f'{namespace}{resource}'
-
-    #     subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
-    #     if not len(subject_types):
-    #         raise Exception('Type could not be detected.')
-    #     subject_type = subject_types[0]
-
-    #     if rdflib.URIRef(subject_type) == rdflib.OWL.Class:
-    #         shape = 'class'
-    #     elif rdflib.URIRef(subject_type) == rdflib.OWL.DatatypeProperty:
-    #         shape = 'property'
-    #     elif rdflib.URIRef(subject_type) == rdflib.OWL.ObjectProperty:
-    #         shape = 'property'
-    #     else:
-    #         raise Exception('Shape not determined.')
-
-    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
-    #     if not shape_path.exists():
-    #         raise Exception('Shape file not found.')
-
-    #     with open(shape_path) as construct:
-    #         construct = construct.read()
-    #         construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
-
-    #     resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
-    #     resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
-    #     resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
-    #     resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
-    #     resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
-    #     resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
-
-    #     result = resource_graph.query(construct)
-    #     data = result.serialize(format="json-ld").decode()
-    #     data = json.loads(data)
-
-    #     return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
-
-    # elif resource in resources:
-
-    #     namespace = 'https://dev.fiafcore.org/'
-    #     subject_uri = f'{namespace}{resource}'
-
-    #     subject_types = [o for s,p,o in resource_graph.triples((rdflib.URIRef(subject_uri), rdflib.RDF.type, None))]
-    #     if not len(subject_types):
-    #         raise Exception('Type could not be detected.')
-    #     subject_type = subject_types[0]
-
-    #     if subject_type in work_classes:
-    #         shape = 'work'
-    #     elif subject_type in manifestation_classes:
-    #         shape = 'manifestation'
-    #     elif subject_type in item_classes:
-    #         shape = 'item'
-    #     elif subject_type in carrier_classes:
-    #         shape = 'carrier'
-    #     elif subject_type in agent_classes:
-    #         shape = 'agent'
-    #     else:
-    #         raise Exception('Shape not determined.')
-
-    #     shape_path = pathlib.Path.cwd() / 'shapes' / f'{shape}.rq'
-    #     if not shape_path.exists():
-    #         raise Exception('Shape file not found.')
-
-    #     with open(shape_path) as construct:
-    #         construct = construct.read()
-    #         construct = construct.replace('SUBJECT_URI', f'<{subject_uri}>')
-
-    #     resource_graph.add((rdflib.DC.description, rdflib.RDFS.label, rdflib.Literal("Description")))
-    #     resource_graph.add((rdflib.DC.source, rdflib.RDFS.label, rdflib.Literal("Source")))
-    #     resource_graph.add((rdflib.RDFS.subClassOf, rdflib.RDFS.label, rdflib.Literal("Subclass Of")))
-    #     resource_graph.add((rdflib.RDFS.domain, rdflib.RDFS.label, rdflib.Literal("Domain")))
-    #     resource_graph.add((rdflib.RDFS.range, rdflib.RDFS.label, rdflib.Literal("Range")))
-    #     resource_graph.add((rdflib.RDFS.label, rdflib.RDFS.label, rdflib.Literal("Label")))
-
-    #     result = resource_graph.query(construct)
-    #     data = result.serialize(format="json-ld").decode()
-    #     data = json.loads(data)
-
-    #     return render_template('entity.html', resource=f'{namespace}{resource}', data=data)
-    # else:
-    #     return render_template('error.html')
 
 
 if __name__ == "__main__":
