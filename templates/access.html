@@ -3,8 +3,22 @@
 
 {% block content %}
 
-<br>Work in Progress
+<h4>SPARQL query</h4>
 
+Queries to the knowledge graph can be made below, expressed in the SPARQL querying langauge.
+
+<br><br>
+
+<div id="yasgui"></div>
+
+<script>
+    const yasgui = new Yasgui(document.getElementById("yasgui"), {
+      requestConfig: {
+        endpoint: "https://data.fiafcore.org"
+      },
+      copyEndpointOnNewTab: false 
+    });
+  </script>
 <script>
     document.getElementById("access").style.fontWeight = 'Bold';
 </script>
