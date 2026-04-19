@@ -9,5 +9,5 @@ Documentation for the [FIAFcore](https://github.com/FIAF/fiafcore) ontology.
 A development instance of this documentation can be run locally with
 
 ```sh
-./dev.sh
+./local.sh
 ```

@@ -327,7 +327,8 @@ def page(resource):
             # apply shape query to example graph and return json-ld.
 
             result = (example_graph+ontology_graph).query(construct)
-            data = result.serialize(format="json-ld").decode()
+            print(result.serialize(format="ttl"))
+            data = result.serialize(format="json-ld").decode('utf-8')
             data = json.loads(data)
 
             return render_template('entity.html', resource=str(uri), data=data)
@@ -378,8 +379,8 @@ def page(resource):
 
         # format switch to prepare for flask.
 
-        data = rdflib.Graph().parse(data=r.text)
-        data = data.serialize(format="json-ld")
+        data = rdflib.Graph().parse(data=r.content)
+        data = data.serialize(format="json-ld", encoding="utf-8")
         data = json.loads(data)
 
         return render_template('entity.html', resource=str(uri), data=data)
