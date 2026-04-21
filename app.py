@@ -1,6 +1,7 @@
 import json
 import os
 import pathlib
+import random
 import requests
 import rdflib
 from flask import Flask
@@ -192,17 +193,23 @@ def ontology():
         string += f'{desc}<br><br>'
 
         string += '<i>Properties</i><br><br>'
-        string += "<table><tr style='background-color: grey;color: white'><td><b>Property</b></td><td><b>Range</b></td><td><b>Description</b></td></tr>"
+        string += "<table style='table-layout: fixed;width: 100%;'><tr style='background-color: grey;color: white'><td><b>Property</b></td><td><b>Description</b></td><td><b>Example</b></td></tr>"
         props = [s for s,p,o in g.triples((None, rdflib.RDFS.domain, entity))]
         for p in sorted(props):
             prop = f'fiaf:{pathlib.Path(p).name}'
-            rang = pull_attribute(p, rdflib.RDFS.range, g) # TODO, you need to replace xml schema prefix.
-            if 'fiafcore' in rang:
-                rang = f'fiaf:{pathlib.Path(rang).name}'
-            else:
-                rang = rang.replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')
             desc = str(pull_attribute(p, rdflib.URIRef('http://purl.org/dc/elements/1.1/description'), g))
-            string += f'<tr><td>{prop}</td><td>{rang}</td><td>{desc}</td></tr>'
+            examples = [o for s,p,o in example_graph.triples((None, p, None))]
+            if len(examples):
+                example = random.choice(examples)
+                if type(example) is type(rdflib.BNode()):
+                    example = '_:blankNode'
+                if 'fiafcore.org' in example:
+                    example = f'&lt;<a href={example} style="color: crimson;">{example}</a>&gt;'
+            else:
+                example = ''
+
+            string += f'<tr><td>{prop}</td><td>{desc}</td><td>{example}</td></tr>'
+
         string += '</table>'
 
         # add example link, where relevant.
@@ -350,7 +357,7 @@ def page(resource):
 
         entity_types = r.json()['results']['bindings']
         if not len(entity_types):
-            raise Exception('More than one type should exist against entity.')
+            raise Exception(f'At least one type should exist for {uri}.')
 
         # pull type and generalise.
 
