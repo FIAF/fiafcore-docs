@@ -192,6 +192,54 @@ def ontology():
         desc = pull_attribute(entity, rdflib.URIRef('http://purl.org/dc/elements/1.1/description'), g)
         string += f'{desc}<br><br>'
 
+        string += '<i>Subclasses</i><br><br>'
+        query = """
+               PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+               SELECT ?sub ?subLabel
+               WHERE {
+                   ?sub rdfs:subClassOf <"""+str(entity)+"""> .
+                   ?sub rdfs:label ?subLabel
+               }
+           """
+
+        subclasses = [{'uri':str(x.sub), 'label':str(x.subLabel)} for x in g.query(query)]
+        for s in subclasses:
+
+            query = """
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                    SELECT ?sub ?subLabel
+                    WHERE {
+                        ?sub rdfs:subClassOf <"""+str(s['uri'])+"""> .
+                        ?sub rdfs:label ?subLabel
+                    }
+                """
+            s['subclasses'] = [{'uri':str(x.sub), 'label':str(x.subLabel)} for x in g.query(query)]
+
+        string += f'<ul class="tree"><li><details><summary>{pull_attribute(entity, rdflib.RDFS.label, g)}</summary>'
+        for a in subclasses:
+
+            string += f'<ul><li>'
+            if len(a["subclasses"]):
+                string += f'<details><summary><a href="{a["uri"]}">{a["label"]}</a></summary>'
+            else:
+                string += f'<a href="{a["uri"]}">{a["label"]}</a>'
+
+            for b in a['subclasses']:
+                string += f'<ul><li>'
+                if 'subclasses' not in b.keys():
+                    string += f'<a href="{b["uri"]}">{b["label"]}</a>'
+                elif not len(b['subclasses']):
+                    string += f'<a href="{b["uri"]}">{b["label"]}</a>'
+                else:
+                    string += f'<details><summary><a href="{b["uri"]}">{b["label"]}</a></summary></details>'
+
+                string += '</li></ul>'
+            if len(a["subclasses"]):
+                string += '</details></li></ul>'
+            else:
+                string += '</li></ul>'
+        string += '</details></li></ul>'
+
         string += '<i>Properties</i><br><br>'
         string += "<table style='table-layout: fixed;width: 100%;'><tr style='background-color: grey;color: white'><td><b>Property</b></td><td><b>Description</b></td><td><b>Example</b></td></tr>"
         props = [s for s,p,o in g.triples((None, rdflib.RDFS.domain, entity))]
