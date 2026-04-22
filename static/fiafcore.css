@@ -122,7 +122,7 @@ td {
 
 .tree summary::before {
   z-index: 1;
-  background: #696 url('expand-collapse.svg') 0 0;
+  background: #27212e url('expand-collapse.svg') 0 0;
 }
 
 .tree details[open] > summary::before {
