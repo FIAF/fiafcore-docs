@@ -11,14 +11,43 @@ Queries to the knowledge graph can be made below, expressed in the SPARQL queryi
 
 <div id="yasgui"></div>
 
+
+<h4>Keyword query</h4>
+
+Keyword searches across the knowledge graph can be made below.
+
+<br><br>
+
+<select id="keyword_type" name="keyword_type">
+  <option value="work">work</option>
+  <option value="agent">agent</option>
+</select>
+
+  <input type="text" id="keyword_text" name="keyword_text"><br><br>
+
+  <div id="keyword_result"></div>
+
+
+
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="../static/keyword_search.js"></script>
+
+
+
+
 <script>
     const yasgui = new Yasgui(document.getElementById("yasgui"), {
       requestConfig: {
         endpoint: "https://data.fiafcore.org"
       },
-      copyEndpointOnNewTab: false 
+      copyEndpointOnNewTab: false
     });
   </script>
+
+
+
+
 <script>
     document.getElementById("access").style.fontWeight = 'Bold';
 </script>
