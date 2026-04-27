@@ -3,6 +3,8 @@ console.log('hello')
 function display_results(data) {
   console.log('@@@')
   console.log(data.length)
+  console.log(data)
+
 }
 
 d3.select("#keyword_result")
@@ -20,22 +22,15 @@ d3.select("#keyword_text").on("change", function (event) {
 
   let url = 'https://data.fiafcore.org';
   let sparqlQuery = `
+    prefix fiaf: <https://dev.fiafcore.org/>
+    prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    select ?institution (count(?item) as ?items)
-    where {
-      ?item <https://dev.fiafcore.org/hasHoldingInstitution> ?i .
-      ?i rdfs:label ?institution
-      } group by ?institution
+    select ?entity ?label where {
+      ?entity rdf:type/rdfs:subClassOf* fiaf:${keyword_type} .
+      ?entity rdfs:label ?label .
+      filter(contains(lcase(str(?label)), "${keyword_text}"))
+    } limit 40
   `;
-
-  // prefix fiaf: <https://dev.fiafcore.org/>
-  // prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-  // prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-  // select ?work ?label where {
-  //   ?work rdf:type/rdfs:subClassOf* fiaf:Work .
-  //   ?work rdfs:label ?label .
-  //   filter(contains(lcase(str(?label)), "lunch"))
-  // } limit 100
 
   let body = new URLSearchParams();
   body.append('query', sparqlQuery);
@@ -49,7 +44,7 @@ d3.select("#keyword_text").on("change", function (event) {
     body: body
   })
   .then(response => response.json())
-  .then(data => console.log(data['results']['bindings']))
-  .catch(error => console.error('Erreur:', error));
+  .then(data => display_results(data['results']['bindings']))
+  .catch(error => console.error('Error:', error));
 
 });
