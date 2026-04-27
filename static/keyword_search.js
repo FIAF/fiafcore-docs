@@ -2,9 +2,9 @@ console.log('hello')
 
 function display_results(data) {
 
-  // console.log('@@@')
-  // console.log(data.length)
-  // console.log(data)
+  console.log('@@@')
+  console.log(data.length)
+  console.log(data)
 
   d3.select('#keyword_canvas').style("background-color", 'powderblue')
 
@@ -16,7 +16,9 @@ function display_results(data) {
     .attr('x', 30)
     .attr('y', (d,i) => 20+(i*30))
     .text(d => d.label.value)
-
+    .on('click', function (k, d) {
+      window.location.href = d.entity.value;
+    })
 }
 
 d3.select("#keyword_result")
