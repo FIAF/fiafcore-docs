@@ -1,9 +1,21 @@
 console.log('hello')
 
 function display_results(data) {
-  console.log('@@@')
-  console.log(data.length)
-  console.log(data)
+
+  // console.log('@@@')
+  // console.log(data.length)
+  // console.log(data)
+
+  d3.select('#keyword_canvas').style("background-color", 'powderblue')
+
+  result = d3.select('#keyword_canvas')
+    .selectAll('text')
+    .data(data)
+
+  result.join('text')
+    .attr('x', 30)
+    .attr('y', (d,i) => 20+(i*30))
+    .text(d => d.label.value)
 
 }
 
@@ -13,6 +25,10 @@ d3.select("#keyword_result")
     .attr("width", '100%')
     .attr("height", 500)
     .style("background-color", "#FFE5B4");
+
+// PROBLEM only text change will action result,
+// so if you keep text as-is but change type,
+// nothing will happen.
 
 d3.select("#keyword_text").on("change", function (event) {
 
